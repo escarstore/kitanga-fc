@@ -700,14 +700,14 @@ const DataService = {
     },
 
     async getFormation() {
-        const formations = await this.getData('formations');
-        const home = formations.find(f => f.side === 'home') || { formation_name: '4-3-3', positions: {}, show_on_site: true };
-        const away = formations.find(f => f.side === 'away') || { formation_name: '4-4-2', positions: {}, show_on_site: true };
-        return { 
-            home: { ...home, showOnSite: home.show_on_site !== false, formation_name: home.formation_name || '4-3-3' }, 
-            away: { ...away, showOnSite: away.show_on_site !== false, formation_name: away.formation_name || '4-4-2' } 
-        };
-    },
+    const formations = await this.getData('formations');
+    const home = formations.find(f => f.side === 'home') || { formation_name: '4-3-3', positions: {}, show_on_site: true };
+    const away = formations.find(f => f.side === 'away') || { formation_name: '4-4-2', positions: {}, show_on_site: true };
+    return { 
+        home: { ...home, showOnSite: home.show_on_site !== false, formation_name: home.formation_name || '4-3-3' }, 
+        away: { ...away, showOnSite: away.show_on_site !== false, formation_name: away.formation_name || '4-4-2' } 
+    };
+}
 
     async getTickerSettings() {
         const settings = await this.getData('ticker_settings');

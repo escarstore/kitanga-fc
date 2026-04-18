@@ -84,7 +84,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(7,14,43,.97)
 /* HERO SECTION */
 #hero{padding:60px 4%;background:radial-gradient(ellipse at 30% 50%,rgba(19,56,190,.3),transparent 60%),linear-gradient(160deg,#070E2B,#0A1F6E 55%,#070E2B);text-align:center}
 .hero-content{max-width:800px;margin:0 auto}
-.hero-tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--accent);border:1px solid var(--accent);padding:4px 12px;border-radius:2px;margin-bottom:16px}
+.hero-tag{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--accent);border:1px solid var(--accent);padding:4px 12px;border-radius:5px;margin-bottom:16px; margin-top: 15px;}
 .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,9vw,108px);line-height:.9;letter-spacing:4px}
 .hero-title span{color:var(--accent)}
 .hero-sub{font-size:15px;font-weight:300;color:var(--grey);margin:16px 0 28px;line-height:1.6;max-width:600px;margin-left:auto;margin-right:auto}
@@ -111,7 +111,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(7,14,43,.97)
 #club-news{background:var(--card2);padding:68px 4%}
 .news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:24px}
 .news-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:var(--transition)}
-.news-card:hover{transform:translateY(-4px);border-color:var(--accent)}
+.news-card:hover{transform:translateY(-4px);border-color:var(--accent);cursor:pointer}
 .news-card-img{width:100%;height:160px;object-fit:cover}
 .news-card-placeholder{height:60px;background:linear-gradient(135deg,var(--blue),var(--blue-mid));display:flex;align-items:center;justify-content:center;font-size:26px}
 .news-card-body{padding:15px}
@@ -121,6 +121,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(7,14,43,.97)
 .news-meta{font-size:10px;color:var(--grey);margin-top:8px}
 .news-src-link{color:var(--accent);font-size:11px;font-weight:700;text-decoration:none;display:inline-block;margin-top:6px}
 
+
+/* LIVE SCORES */
+#live-scores{background:var(--dark);padding:68px 4%}
+.scores-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+.score-tab{background:var(--card);border:1px solid var(--border);color:var(--grey);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;padding:7px 14px;border-radius:20px;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.score-tab.active{background:var(--accent);color:var(--dark);border-color:var(--accent)}
+.scores-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:8px}
+.score-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;transition:var(--transition)}
+.score-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.score-comp{font-size:9px;color:var(--accent);font-weight:700;letter-spacing:3px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.score-status{font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:10px}
+.score-status.live{background:rgba(255,50,50,.15);color:#ff5252;animation:pulse 1.5s infinite}
+.score-status.ft{background:rgba(0,194,255,.1);color:var(--accent)}
+.score-status.ns{background:rgba(255,255,255,.06);color:var(--grey)}
+.score-teams{display:flex;align-items:center;gap:10px}
+.score-team{flex:1;text-align:center}
+.score-team-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;line-height:1.2;margin-bottom:4px}
+.score-team-logo{width:36px;height:36px;object-fit:contain;margin:0 auto 6px;display:block}
+.score-vs{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--white);min-width:60px;text-align:center;flex-shrink:0}
+.score-vs.has-score{color:var(--accent)}
+.score-time{font-size:10px;color:var(--grey);text-align:center;margin-top:10px}
+.scores-empty{text-align:center;padding:40px 20px;color:var(--grey);font-size:14px}
+.scores-refresh{text-align:center;margin-top:16px}
+.live-dot{width:7px;height:7px;background:#ff5252;border-radius:50%;display:inline-block;margin-right:5px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 /* PREDICTIONS */
 #predictions{background:linear-gradient(135deg,#040e22,#071230);border-top:1px solid rgba(255,184,0,.1);border-bottom:1px solid rgba(255,184,0,.1);padding:68px 4%}
 .pred-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;margin-top:24px}
@@ -470,6 +495,7 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
     </button>
     <ul class="nav-links" id="nav-links">
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('club-news')">News</a></li>
+      <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('live-scores')">📺 Live Scores</a></li>
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('predictions')">Predictions</a></li>
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('next-match')">Next Match</a></li>
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('fixtures')">Fixtures</a></li>
@@ -505,8 +531,8 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
     <h1 class="hero-title">KITANGA<br><span>FC</span></h1>
     <p class="hero-sub">Your trusted source for AI-powered football predictions, live international scores, match previews and expert betting tips — free, every day.</p>
     <div class="hero-btns">
-      <a href="javascript:void(0)" onclick="scrollToSection('predictions')" class="btn-p">⚙ Today's Predictions</a>
-      <a href="javascript:void(0)" onclick="scrollToSection('club-news')" class="btn-s">📝 Latest News</a>
+      <a href="javascript:void(0)" onclick="scrollToSection('predictions')" class="btn-p"> Today's Predictions</a>
+      <a href="javascript:void(0)" onclick="scrollToSection('club-news')" class="btn-s"> Latest News</a>
     </div>
     <div class="hero-stats" id="hero-stats">
       <div><div class="hs-num" id="hs-wins">—</div><div class="hs-lbl">Wins</div></div>
@@ -567,6 +593,29 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
   <div class="news-grid" id="news-grid"><div class="pred-loading"><div class="pred-spinner"></div>Fetching latest football news...</div></div>
   <div id="news-refresh-row" style="text-align:center;margin-top:16px;display:none">
     <button class="btn-s" onclick="fetchLiveNews(true)" style="font-size:12px;padding:8px 20px">Refresh News</button>
+  </div>
+</section>
+
+
+<!-- LIVE SCORES -->
+<section id="live-scores">
+  <div class="sl">Real-Time</div>
+  <div class="st">Live <span>Scores</span></div>
+  <div class="scores-tabs" id="scores-tabs">
+    <button class="score-tab active" onclick="switchLeague('all')" data-league="all">⚽ All</button>
+    <button class="score-tab" onclick="switchLeague(39)"  data-league="39">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</button>
+    <button class="score-tab" onclick="switchLeague(140)" data-league="140">🇪🇸 La Liga</button>
+    <button class="score-tab" onclick="switchLeague(2)"   data-league="2">⭐ Champions League</button>
+    <button class="score-tab" onclick="switchLeague(78)"  data-league="78">🇩🇪 Bundesliga</button>
+    <button class="score-tab" onclick="switchLeague(135)" data-league="135">🇮🇹 Serie A</button>
+    <button class="score-tab" onclick="switchLeague(61)"  data-league="61">🇫🇷 Ligue 1</button>
+    <button class="score-tab" onclick="switchLeague(3)"   data-league="3">🏆 Europa League</button>
+    <button class="score-tab" onclick="switchLeague(271)" data-league="271">🇺🇬 Uganda PL</button>
+  </div>
+  <div class="scores-grid" id="scores-grid"><div class="pred-loading"><div class="pred-spinner"></div>Loading live scores...</div></div>
+  <div class="scores-refresh">
+    <button class="btn-s" onclick="fetchLiveScores(true)" style="font-size:12px;padding:8px 20px"> Refresh Scores</button>
+    <div id="scores-last-update" style="font-size:10px;color:var(--grey);margin-top:6px"></div>
   </div>
 </section>
 
@@ -762,9 +811,9 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
         <strong>Disclosure:</strong> Links on this site are licensed. This helps us keep the site free. We only partner with licensed, reputable betting companies. Always gamble responsibly. 18+ only.
       </div>
       <div class="social-row">
-        <a href="https://facebook.com" target="_blank" class="social-btn social-fb"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</a>
-        <a href="https://wa.me/256750162429" target="_blank" class="social-btn social-wa"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a>
-        <a href="https://twitter.com" target="_blank" class="social-btn social-tw"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X / Twitter</a>
+        <a href="https://facebook.com/KitangaFC" target="_blank" class="social-btn social-fb"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</a>
+        <a href="whatsapp://send?phone=256750162429" onclick="if(!this.href.startsWith('whatsapp'))return;window.location.href=this.href;return false;" class="social-btn social-wa"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a>
+        <a href="https://x.com/KitangaFC" target="_blank" class="social-btn social-tw"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X / Twitter</a>
       </div>
     </div>
     <div class="about-contact-box">
@@ -964,11 +1013,11 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
       <p style="font-size:12px;color:var(--grey);margin-top:6px"> <a href="https://wa.me/256750162429" target="_blank" style="color:var(--accent)">+256 750 162 429</a></p>
       <p style="font-size:12px;color:var(--grey);margin-top:6px"> Uganda 🇺🇬</p>
       <div class="social-links-footer" style="margin-top:14px">
-        <a href="https://facebook.com" target="_blank" class="slink-real" style="background:#1877F2" title="Facebook"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-        <a href="https://wa.me/256750162429" target="_blank" class="slink-real" style="background:#25D366" title="WhatsApp"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
-        <a href="https://twitter.com" target="_blank" class="slink-real" style="background:#1DA1F2" title="X / Twitter"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://facebook.com/KitangaFC" target="_blank" class="slink-real" style="background:#1877F2" title="Facebook"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+        <a href="whatsapp://send?phone=256750162429" onclick="window.location.href=this.href;return false;" class="slink-real" style="background:#25D366" title="WhatsApp"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        <a href="https://x.com/KitangaFC" target="_blank" class="slink-real" style="background:#1DA1F2" title="X / Twitter"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
         <a href="https://youtube.com" target="_blank" class="slink-real" style="background:#FF0000" title="YouTube"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
-        <a href="https://instagram.com" target="_blank" class="slink-real" style="background:linear-gradient(45deg,#f09433,#dc2743,#bc1888)" title="Instagram"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
+        <a href="https://instagram.com/KitangaFC" target="_blank" class="slink-real" style="background:linear-gradient(45deg,#f09433,#dc2743,#bc1888)" title="Instagram"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
       </div>
     </div>
     <div class="fc">
@@ -1119,7 +1168,12 @@ const DataService = {
 };
 
 // API Keys
-function getGeminiKey() { return localStorage.getItem('kfc_gemini_key') || ''; }
+const GEMINI_KEY_EMBEDDED     = 'AIzaSyCNOX5C9GyguNIbvjbtbkkrd3nqTUJJ5lA';
+const API_FOOTBALL_KEY        = '6286fd9622f1b734372f742c3df6473ee05eb642fb48adddff5ea95eaa57af66';
+function getGeminiKey() {
+    return GEMINI_KEY_EMBEDDED.trim() || localStorage.getItem('kfc_gemini_key') || '';
+}
+function getFootballKey() { return API_FOOTBALL_KEY; }
 
 // Render Functions
 async function renderTicker() {
@@ -1426,9 +1480,15 @@ async function fetchLiveNews(force) {
         { url: 'https://www.skysports.com/rss/12040', source: 'Sky Sports' },
         { url: 'https://www.goal.com/feeds/en/news', source: 'Goal.com' }
     ];
+    // Safe timeout — AbortSignal.timeout() not supported on older Android Chrome
+    function _fetchWithTimeout(url, ms) {
+        const ctrl = new AbortController();
+        const id = setTimeout(() => ctrl.abort(), ms);
+        return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
+    }
     for (const feed of FEEDS) {
         try {
-            const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(feed.url), { signal: AbortSignal.timeout(8000) });
+            const res = await _fetchWithTimeout('https://api.allorigins.win/get?url=' + encodeURIComponent(feed.url), 8000);
             if (!res.ok) continue;
             const data = await res.json();
             if (!data || !data.contents) continue;
@@ -1512,7 +1572,23 @@ function renderNewsCards(items) {
     const grid = document.getElementById('news-grid');
     if (!grid) return;
     const colors = { TRANSFER: '#00C2FF', 'MATCH RESULT': '#00E676', INJURY: '#FF3D57', PREVIEW: '#FFB800', BREAKING: '#FF3D57' };
-    grid.innerHTML = items.map(n => `<div class="news-card"><div class="news-card-placeholder">📰 <span style="font-size:12px">${n.league || 'FOOTBALL'}</span></div><div class="news-card-body"><div class="news-cat-tag" style="color:${colors[n.category] || 'var(--accent)'}">${n.category || 'NEWS'}${n.time ? ` · ${n.time}` : ''}</div><div class="news-headline">${escapeHtml(n.title)}</div><div class="news-blurb">${escapeHtml(n.summary)}</div><div class="news-meta">📡 ${n.source || 'Football News'}</div></div></div>`).join('');
+    grid.innerHTML = items.map(n => {
+        const hasUrl = n.url && n.url.startsWith('http');
+        const tag = hasUrl ? 'a' : 'div';
+        const linkAttr = hasUrl ? `href="${n.url}" target="_blank" rel="noopener"` : '';
+        return `<${tag} ${linkAttr} class="news-card" style="text-decoration:none;color:inherit;display:block">
+            <div class="news-card-placeholder">📰 <span style="font-size:12px">${n.league || 'FOOTBALL'}</span></div>
+            <div class="news-card-body">
+                <div class="news-cat-tag" style="color:${colors[n.category] || 'var(--accent)'}">${n.category || 'NEWS'}${n.time ? ` · ${n.time}` : ''}</div>
+                <div class="news-headline">${escapeHtml(n.title)}</div>
+                <div class="news-blurb">${escapeHtml(n.summary)}</div>
+                <div class="news-meta" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+                    <span>📡 ${n.source || 'Football News'}</span>
+                    ${hasUrl ? `<span style="color:var(--accent);font-size:11px;font-weight:700">Read More →</span>` : ''}
+                </div>
+            </div>
+        </${tag}>`;
+    }).join('');
 }
 async function fetchAIPredictions() {
     const grid = document.getElementById('predictions-grid');
@@ -1589,7 +1665,13 @@ async function sendChat() {
     inp.value = '';
     addChatMsg('user', msg);
     const key = getGeminiKey();
-    if (!key) { addChatMsg('bot', '⚠️ Gemini API key not configured. Set it in the Admin Panel → Settings → AI Engine.'); return; }
+    if (!key) {
+        const isLocal = window.location.protocol !== 'https:';
+        addChatMsg('bot', isLocal
+            ? '⚠️ You are opening this file locally. Push index.html to GitHub Pages and open from your https:// URL — Gemini will work automatically.'
+            : '⚠️ Gemini API key not configured. Set it in the Admin Panel → Settings → AI Engine.');
+        return;
+    }
     const typDiv = document.createElement('div');
     typDiv.className = 'cmsg typing';
     typDiv.textContent = '⚽ Thinking...';
@@ -1616,7 +1698,13 @@ async function sendChat() {
             body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: 500, temperature: 0.85 } })
         });
         document.getElementById('chat-typing')?.remove();
-        if (!resp.ok) { addChatMsg('bot', '❌ API Error. Check your Gemini key in admin panel.'); return; }
+        if (!resp.ok) {
+            const isLocal = window.location.protocol !== 'https:';
+            const msg = isLocal
+                ? '❌ Gemini is blocked on local files. Push to GitHub Pages and open from https:// — then it will work.'
+                : '❌ Gemini API error. Your key may be invalid or quota exceeded. Check aistudio.google.com.';
+            addChatMsg('bot', msg); return;
+        }
         const data = await resp.json();
         const reply = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('\n').trim() || '⚽ No response. Try again!';
         addChatMsg('bot', reply);
@@ -1645,6 +1733,7 @@ async function init() {
     await renderReviews();
     await renderFormationDisplay();
     fetchLiveNews();
+    fetchLiveScores();
     fetchAIPredictions();
     botReady();
     addChatMsg('bot', '👋 Hi! I\'m your Kitanga FC Football Bot. Ask me about live scores, transfers, predictions and anything football! ⚽');
@@ -1658,6 +1747,209 @@ async function init() {
     });
 }
 init();
+
+// ═══════════════════════════════════════════════════════════════
+//  LIVE SCORES — API-Football via RapidAPI
+//  Free tier: 100 requests/day  |  Cache: 5 min to protect quota
+// ═══════════════════════════════════════════════════════════════
+
+const LEAGUE_IDS = [39, 140, 2, 78, 135, 61, 3, 271];
+const LEAGUE_NAMES = {
+    39: 'Premier League', 140: 'La Liga', 2: 'Champions League',
+    78: 'Bundesliga', 135: 'Serie A', 61: 'Ligue 1',
+    3: 'Europa League', 271: 'Uganda PL'
+};
+
+let allScoreData   = [];   // all fetched fixtures
+let activeLeague   = 'all';
+let scoresTimer    = null;
+let hasLiveMatches = false;
+
+async function fetchLiveScores(force) {
+    const CACHE = 'kfc_scores_v1', CTIME = 'kfc_scores_ts_v1', MINS = 5;
+    const grid = document.getElementById('scores-grid');
+    if (!grid) return;
+
+    // Cache check (saves daily API quota)
+    if (!force) {
+        try {
+            const cached = localStorage.getItem(CACHE);
+            const ts = parseInt(localStorage.getItem(CTIME) || '0');
+            if (cached && Date.now() - ts < MINS * 60000) {
+                allScoreData = JSON.parse(cached);
+                renderScores();
+                scheduleRefresh();
+                return;
+            }
+        } catch(e) {}
+    }
+
+    grid.innerHTML = '<div class="pred-loading"><div class="pred-spinner"></div>Loading live scores...</div>';
+
+    const key = getFootballKey();
+    if (!key) {
+        grid.innerHTML = '<div class="scores-empty">API-Football key not configured.</div>';
+        return;
+    }
+
+    // Fetch today's fixtures for all leagues in parallel (one request each)
+    const today = new Date().toISOString().slice(0, 10);
+    // Season logic: Aug+ = this year's season, Jan-Jul = last year's season
+    const _now = new Date();
+    const season = _now.getMonth() >= 7 ? _now.getFullYear() : _now.getFullYear() - 1;
+    const fetches = LEAGUE_IDS.map(lid =>
+        fetch(`https://v3.football.api-sports.io/fixtures?league=${lid}&season=${season}&date=${today}`, {
+            headers: {
+                'x-rapidapi-host': 'v3.football.api-sports.io',
+                'x-rapidapi-key': key
+            }
+        })
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    );
+
+    const results = await Promise.allSettled(fetches);
+    allScoreData = [];
+
+    results.forEach((res, i) => {
+        if (res.status === 'fulfilled' && res.value?.response) {
+            res.value.response.forEach(fix => {
+                allScoreData.push(normalizeFixture(fix, LEAGUE_IDS[i]));
+            });
+        }
+    });
+
+    // Sort: LIVE first → FT → upcoming by time
+    allScoreData.sort((a, b) => {
+        const order = { LIVE: 0, FT: 1, NS: 2 };
+        const ao = order[a.statusGroup] ?? 3;
+        const bo = order[b.statusGroup] ?? 3;
+        return ao !== bo ? ao - bo : a.kickoffTs - b.kickoffTs;
+    });
+
+    try {
+        localStorage.setItem(CACHE, JSON.stringify(allScoreData));
+        localStorage.setItem(CTIME, Date.now().toString());
+    } catch(e) {}
+
+    renderScores();
+    updateLastRefresh();
+    scheduleRefresh();
+}
+
+function normalizeFixture(fix, leagueId) {
+    const s = fix.fixture.status;
+    const elapsed = fix.fixture.status.elapsed;
+    let statusGroup = 'NS';
+    let statusLabel = '';
+
+    const liveStatuses = ['1H','HT','2H','ET','BT','P','SUSP','INT','LIVE'];
+    const ftStatuses   = ['FT','AET','PEN'];
+
+    if (liveStatuses.includes(s.short)) {
+        statusGroup = 'LIVE';
+        statusLabel = elapsed ? elapsed + "'" : 'LIVE';
+    } else if (ftStatuses.includes(s.short)) {
+        statusGroup = 'FT';
+        statusLabel = 'FT';
+    } else {
+        statusGroup = 'NS';
+        // Format kick-off time in local time
+        const d = new Date(fix.fixture.date);
+        statusLabel = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    return {
+        id:          fix.fixture.id,
+        leagueId,
+        leagueName:  LEAGUE_NAMES[leagueId] || fix.leagues?.name || 'Football',
+        home:        fix.teams.home.name,
+        away:        fix.teams.away.name,
+        homeLogo:    fix.teams.home.logo,
+        awayLogo:    fix.teams.away.logo,
+        homeGoals:   fix.goals.home,
+        awayGoals:   fix.goals.away,
+        statusGroup,
+        statusLabel,
+        kickoffTs:   new Date(fix.fixture.date).getTime(),
+        venue:       fix.fixture.venue?.name || ''
+    };
+}
+
+function switchLeague(leagueId) {
+    activeLeague = leagueId;
+    document.querySelectorAll('.score-tab').forEach(t => {
+        t.classList.toggle('active', String(t.dataset.league) === String(leagueId));
+    });
+    renderScores();
+}
+
+function renderScores() {
+    const grid = document.getElementById('scores-grid');
+    if (!grid) return;
+
+    const filtered = activeLeague === 'all'
+        ? allScoreData
+        : allScoreData.filter(m => m.leagueId === activeLeague || m.leagueId === Number(activeLeague));
+
+    if (!filtered.length) {
+        const leagueName = activeLeague === 'all' ? 'any league' : (LEAGUE_NAMES[activeLeague] || 'this league');
+        grid.innerHTML = `<div class="scores-empty">
+            <div style="font-size:36px;margin-bottom:12px"></div>
+            <div>No matches today for <strong>${leagueName}</strong>.</div>
+            <div style="font-size:12px;margin-top:6px;color:var(--grey)">Check back on matchday or try another league.</div>
+        </div>`;
+        return;
+    }
+
+    hasLiveMatches = filtered.some(m => m.statusGroup === 'LIVE');
+    grid.innerHTML = filtered.map(renderScoreCard).join('');
+}
+
+function renderScoreCard(m) {
+    const isLive = m.statusGroup === 'LIVE';
+    const hasSc  = m.homeGoals !== null && m.awayGoals !== null;
+    const score  = hasSc ? `${m.homeGoals} - ${m.awayGoals}` : 'vs';
+
+    const statusClass = isLive ? 'live' : (m.statusGroup === 'FT' ? 'ft' : 'ns');
+    const statusHtml  = isLive
+        ? `<span class="score-status live"><span class="live-dot"></span>${m.statusLabel}</span>`
+        : `<span class="score-status ${statusClass}">${m.statusLabel}</span>`;
+
+    const logoStyle = 'width:36px;height:36px;object-fit:contain;margin:0 auto 6px;display:block';
+
+    return `<div class="score-card">
+        <div class="score-comp">
+            <span>${m.leagueName}</span>
+            ${statusHtml}
+        </div>
+        <div class="score-teams">
+            <div class="score-team">
+                <img src="${m.homeLogo}" alt="${m.home}" style="${logoStyle}" onerror="this.style.display='none'">
+                <div class="score-team-name">${m.home}</div>
+            </div>
+            <div class="score-vs ${hasSc ? 'has-score' : ''}">${score}</div>
+            <div class="score-team">
+                <img src="${m.awayLogo}" alt="${m.away}" style="${logoStyle}" onerror="this.style.display='none'">
+                <div class="score-team-name">${m.away}</div>
+            </div>
+        </div>
+        ${m.venue ? `<div class="score-time">📍 ${m.venue}</div>` : ''}
+    </div>`;
+}
+
+function updateLastRefresh() {
+    const el = document.getElementById('scores-last-update');
+    if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString();
+}
+
+function scheduleRefresh() {
+    clearTimeout(scoresTimer);
+    // Auto-refresh every 60s if there are live matches, else every 5 min
+    const delay = hasLiveMatches ? 60000 : 300000;
+    scoresTimer = setTimeout(() => fetchLiveScores(true), delay);
+}
+
 </script>
 </body>
 </html>

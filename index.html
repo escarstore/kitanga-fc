@@ -490,6 +490,48 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
 .kfc-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .kfc-toast.success{border-color:var(--green);background:rgba(0,230,118,.15)}
 .kfc-toast.error{border-color:var(--red);background:rgba(255,61,87,.15)}
+
+/* ── CUSTOM PREDICTION GENERATOR ─────────────────────────────────────────── */
+.pred-gen-wrap{background:rgba(0,194,255,.04);border:1px solid rgba(0,194,255,.2);border-radius:16px;padding:28px 24px;margin-bottom:36px;max-width:740px;margin-left:auto;margin-right:auto}
+.pred-gen-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--accent);margin-bottom:6px;text-align:center}
+.pred-gen-sub{font-size:12px;color:var(--grey);text-align:center;margin-bottom:20px}
+.pred-gen-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.pred-gen-row .fi{flex:1;min-width:140px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--white);font-family:'Barlow',sans-serif;font-size:14px;outline:none;transition:var(--transition)}
+.pred-gen-row .fi:focus{border-color:var(--accent)}
+.vs-divider{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--grey);flex-shrink:0}
+.pred-gen-btn{background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));border:none;color:var(--white);padding:12px 22px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:var(--transition);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.pred-gen-btn:hover:not(:disabled){background:linear-gradient(135deg,var(--blue-light),var(--accent));color:var(--dark);transform:translateY(-2px)}
+.pred-gen-btn:disabled{opacity:.5;cursor:not-allowed}
+.pred-gen-result{margin-top:20px;display:none}
+.pred-gen-result.visible{display:block}
+.pred-result-card{background:var(--card);border:1px solid rgba(255,184,0,.25);border-radius:12px;padding:20px;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pred-result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.pred-result-teams{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px}
+.pred-result-conf{font-size:10px;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:10px}
+.pred-prob-bars{display:flex;gap:6px;margin:14px 0;border-radius:8px;overflow:hidden}
+.ppb{flex:1;padding:10px 6px;text-align:center;border-radius:6px;transition:flex .6s ease}
+.ppb-pct{font-size:18px;font-weight:700;line-height:1}
+.ppb-lbl{font-size:9px;color:rgba(255,255,255,.6);margin-top:3px;letter-spacing:1px}
+.pred-details-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:14px 0}
+.pred-detail-box{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center}
+.pred-detail-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--accent)}
+.pred-detail-lbl{font-size:9px;color:var(--grey);letter-spacing:1px;margin-top:2px}
+.pred-factors{background:rgba(255,184,0,.05);border:1px solid rgba(255,184,0,.15);border-radius:8px;padding:14px;margin:12px 0}
+.pred-factors h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;color:var(--gold);margin-bottom:10px}
+.pred-factor-item{display:flex;gap:8px;font-size:12px;color:rgba(255,255,255,.8);margin-bottom:6px;line-height:1.4}
+.pred-reasoning{background:rgba(0,194,255,.05);border-left:3px solid var(--accent);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;margin:12px 0}
+.pred-form-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}
+.pred-form-table th{text-align:left;padding:5px 8px;font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;color:var(--grey);border-bottom:1px solid var(--border)}
+.pred-form-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.8)}
+.pred-form-table .result-W{color:var(--green);font-weight:700}
+.pred-form-table .result-D{color:var(--gold);font-weight:700}
+.pred-form-table .result-L{color:var(--red);font-weight:700}
+.pred-gen-error{color:var(--red);text-align:center;padding:14px;font-size:13px;background:rgba(255,61,87,.08);border-radius:8px;margin-top:12px}
+.pred-form-toggle{background:none;border:1px solid var(--border);color:var(--grey);border-radius:6px;padding:6px 14px;font-size:11px;cursor:pointer;margin-top:12px;transition:var(--transition)}
+.pred-form-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.pred-form-section{display:none;margin-top:10px}
+.pred-form-section.open{display:block}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -637,7 +679,24 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
     <div style="background:var(--gold);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;padding:4px 12px;border-radius:3px">AI POWERED</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--gold)">Match Predictions</div>
   </div>
-  <div style="text-align:center;font-size:13px;color:var(--grey);max-width:480px;margin:0 auto 8px">Our bot analyses live form data to predict match outcomes. Use our bet partners to place your bets.</div>
+  <div style="text-align:center;font-size:13px;color:var(--grey);max-width:480px;margin:0 auto 28px">Our bot analyses live form data to predict match outcomes. Use our bet partners to place your bets.</div>
+
+  <!-- ── CUSTOM PREDICTION GENERATOR ─────────────────────────── -->
+  <div class="pred-gen-wrap">
+    <div class="pred-gen-title">⚡ Custom Match Predictor</div>
+    <div class="pred-gen-sub">Enter any two teams — our AI fetches live form data and generates a full analysis</div>
+    <div class="pred-gen-row">
+      <input class="fi" id="pred-home-input" placeholder="🏠 Home Team (e.g. Arsenal)" maxlength="60" autocomplete="off">
+      <div class="vs-divider">VS</div>
+      <input class="fi" id="pred-away-input" placeholder="✈️ Away Team (e.g. Chelsea)" maxlength="60" autocomplete="off" onkeydown="if(event.key==='Enter')getPrediction()">
+      <button class="pred-gen-btn" id="pred-gen-btn" onclick="getPrediction()">
+        <span id="pred-btn-icon">🔮</span> <span id="pred-btn-text">Predict</span>
+      </button>
+    </div>
+    <div class="pred-gen-result" id="pred-gen-result"></div>
+  </div>
+  <!-- ── END CUSTOM PREDICTOR ──────────────────────────────────── -->
+
   <div class="pred-grid" id="predictions-grid"><div class="pred-loading"><div class="pred-spinner"></div>Generating AI predictions...</div></div>
   <div class="affiliate-disclaimer" style="margin-top:20px">⚠️ 18+ only. AI predictions. Always gamble responsibly.</div>
 </section>
@@ -791,7 +850,7 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
       <div class="bot-avatar">🤖</div>
       <div>
         <div class="bot-title">Kitanga FC Football Bot</div>
-        <div class="bot-sub">Powered by Gemini AI</div>
+        <div class="bot-sub">Powered by OpenAI GPT</div>
       </div>
       <div class="bot-online-dot" id="botOnlineDot"></div>
     </div>
@@ -1567,24 +1626,15 @@ async function fetchLiveNews(force) {
         } catch(e) { continue; }
     }
 
-    //Gemini-generated news (only if ALL RSS feeds fail)
-    const key = getGeminiKey();
-    if (!key) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--grey)">Set Gemini API key in admin panel to enable live news.</div>'; return; }
-    const newsPrompt = 'You are a football expert. List 4 major recent football stories from Premier League, La Liga, Champions League, Bundesliga or Serie A. Return ONLY a valid JSON array: [{"title":"Brief headline","league":"League name","category":"TRANSFER or MATCH RESULT or INJURY or PREVIEW","summary":"2 sentence factual summary","source":"Football News","url":"","time":"Recent"}]';
-    const result = await callGemini(newsPrompt, true, 1500);
-    if (!result) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load news. <button onclick="fetchLiveNews(true)" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer">Retry</button></div>'; return; }
+    //Backend-generated news fallback (only if ALL RSS feeds fail)
+    if (!BACKEND_URL) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--grey)">Could not load RSS feeds. Deploy backend and set BACKEND_URL to enable AI news fallback.</div>'; return; }
     try {
-        const s = result.indexOf('['), e = result.lastIndexOf(']');
-        if (s < 0 || e < 0) throw new Error('No JSON');
-        const items = JSON.parse(result.substring(s, e + 1));
-        if (items && items.length) {
-            localStorage.setItem(CACHE, JSON.stringify(items));
-            localStorage.setItem(CTIME, Date.now().toString());
-            renderNewsCards(items);
-            const row = document.getElementById('news-refresh-row');
-            if (row) row.style.display = '';
-        }
-    } catch(err) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Error loading news. <button onclick="fetchLiveNews(true)" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer">Retry</button></div>'; }
+        const resp = await fetch(`${BACKEND_URL}/api/daily-predictions`); // reuse backend for news via /api/news if added
+        // For now show a clean fallback message when RSS fails and backend not yet wired to news
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">News feeds temporarily unavailable. <button onclick="fetchLiveNews(true)" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer;margin-left:8px">Retry</button></div>';
+    } catch(err) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load news. <button onclick="fetchLiveNews(true)" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer">Retry</button></div>';
+    }
 }
 function _newsAge(pubDateStr) {
     if (!pubDateStr) return 'Recent';
@@ -1640,60 +1690,64 @@ function renderNewsCards(items) {
 async function fetchAIPredictions() {
     const grid = document.getElementById('predictions-grid');
     if (!grid) return;
-    // 60-minute cache
-    const CACHE = 'kfc_preds_v3', CTIME = 'kfc_preds_ts_v3', MINS = 60;
+    // 60-minute cache so we don't burn backend credits on every page load
+    const CACHE = 'kfc_preds_v4', CTIME = 'kfc_preds_ts_v4', MINS = 60;
     try {
         const cached = localStorage.getItem(CACHE);
         const ts = parseInt(localStorage.getItem(CTIME) || '0');
         if (cached && Date.now() - ts < MINS * 60000) {
             const preds = JSON.parse(cached);
             if (preds && preds.length) {
-                const BETS = [{ name:'Betway', url:'https://www.betway.com', color:'#00a651' }, { name:'SportyBet', url:'https://www.sportybet.com', color:'#ff6600' }, { name:'Betpawa', url:'https://www.betpawa.com', color:'#d4a017' }, { name:'Bwin', url:'https://www.bwin.com', color:'#0077cc' }];
+                const BETS = [{ name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' }, { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }, { name:'Betpawa', url:'https://www.betpawa.com', color:'#d4a017' }, { name:'Bwin', url:'https://www.bwin.com', color:'#0077cc' }];
                 grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i % BETS.length], BETS[(i+1) % BETS.length])).join('');
                 return;
             }
         }
     } catch(e) {}
-    const key = getGeminiKey();
-    if (!key) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)"><div style="font-size:36px;margin-bottom:12px"></div><div>Loading data....</div></div>'; return; }
+
+    if (!BACKEND_URL) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)"><div style="font-size:36px;margin-bottom:12px">🔧</div><div>Backend not configured. Set BACKEND_URL in the script.</div></div>';
+        return;
+    }
     grid.innerHTML = '<div class="pred-loading"><div class="pred-spinner"></div>Generating AI predictions...</div>';
-    // Inject today's real date so Gemini picks genuinely upcoming matches
-    const today = new Date().toISOString().slice(0, 10);
-    const predPrompt = `Today is ${today}. You are an expert football analyst. List 4 real upcoming matches within the next 7 days from Premier League, La Liga, Champions League, Bundesliga, or Serie A. Use actual club names and realistic probabilities that add up to exactly 100. Return ONLY valid JSON — no markdown, no extra text:\n[{"home":"Real club name","away":"Real club name","comp":"Competition name","date":"YYYY-MM-DD","home_win_pct":45,"draw_pct":25,"away_win_pct":30,"prediction":"HOME WIN or DRAW or AWAY WIN","analysis":"Two sentences of expert tactical reasoning.","confidence":"HIGH or MEDIUM or LOW","tip":"Both Teams to Score or Over 2.5 Goals or Home Clean Sheet or BTTS + Over 2.5"}]`;
-    const result = await callGemini(predPrompt, true, 2000);
-    if (!result) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load predictions. <button onclick="fetchAIPredictions()" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer">Retry</button></div>'; return; }
     try {
-        const s = result.indexOf('['), e = result.lastIndexOf(']');
-        if (s < 0 || e < 0) throw new Error('No JSON array found');
-        const preds = JSON.parse(result.substring(s, e + 1));
+        const resp = await fetch(`${BACKEND_URL}/api/daily-predictions`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (!resp.ok) throw new Error('Backend error ' + resp.status);
+        const data = await resp.json();
+        const preds = data.predictions;
+        if (!preds || !preds.length) throw new Error('No predictions returned');
         localStorage.setItem(CACHE, JSON.stringify(preds));
         localStorage.setItem(CTIME, Date.now().toString());
-        const BETS = [{ name:'Betway', url:'https://www.betway.com', color:'#00a651' }, { name:'SportyBet', url:'https://www.sportybet.com', color:'#ff6600' }, { name:'Betpawa', url:'https://www.betpawa.com', color:'#d4a017' }, { name:'Bwin', url:'https://www.bwin.com', color:'#0077cc' }];
+        const BETS = [{ name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' }, { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }, { name:'Betpawa', url:'https://www.betpawa.com', color:'#d4a017' }, { name:'Bwin', url:'https://www.bwin.com', color:'#0077cc' }];
         grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i % BETS.length], BETS[(i+1) % BETS.length])).join('');
-    } catch(err) { console.error('Pred parse error:', err); grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Error parsing predictions. <button onclick="fetchAIPredictions()" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer">Retry</button></div>'; }
+    } catch(err) {
+        console.error('Daily predictions error:', err);
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load predictions. <button onclick="fetchAIPredictions()" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer;margin-left:8px">Retry</button></div>`;
+    }
 }
 function buildPredCard(m, hw, dr, aw, pred, analysis, conf, tip, bet1, bet2) {
     const confCol = { HIGH:'#00E676', MEDIUM:'#FFB800', LOW:'#FF3D57' };
     const cc = confCol[conf] || '#8A9BB5';
     return `<div class="pred-card"><div class="pred-comp">${m.comp || 'INTERNATIONAL'} · ${m.date ? new Date(m.date).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }) : 'TBD'}</div><div class="pred-teams">${m.home} <span style="color:var(--grey);font-size:14px">vs</span> ${m.away}</div>${conf ? `<div style="text-align:center;margin-bottom:10px"><span style="background:${cc};color:#000;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700">${conf} CONFIDENCE</span></div>` : ''}<div class="pred-bars"><div class="pred-bar" style="background:rgba(0,194,255,.1);border:1px solid rgba(0,194,255,.3)"><div class="pred-pct" style="color:var(--accent)">${hw || 0}%</div><div class="pred-lbl">HOME</div></div><div class="pred-bar" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)"><div class="pred-pct" style="color:var(--grey)">${dr || 0}%</div><div class="pred-lbl">DRAW</div></div><div class="pred-bar" style="background:rgba(255,61,87,.07);border:1px solid rgba(255,61,87,.2)"><div class="pred-pct" style="color:var(--red)">${aw || 0}%</div><div class="pred-lbl">AWAY</div></div></div><div class="pred-outcome"><div class="pred-outcome-lbl">AI PREDICTION</div><div class="pred-outcome-val">${pred || 'TBD'}</div></div>${tip ? `<div style="text-align:center;margin-bottom:10px"><span style="background:rgba(255,184,0,.15);color:var(--gold);padding:3px 12px;border-radius:8px;font-size:11px;font-weight:700">💡 TIP: ${tip}</span></div>` : ''}${analysis ? `<div class="pred-analysis">${analysis}</div>` : ''}<div class="pred-bet-btns"><a href="${bet1.url}" target="_blank" rel="sponsored" class="pred-bet-btn" style="background:${bet1.color};color:#fff">🎰 ${bet1.name}</a><a href="${bet2.url}" target="_blank" rel="sponsored" class="pred-bet-btn" style="background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.3)">💰 ${bet2.name}</a></div><div style="font-size:9px;color:var(--grey);text-align:center;margin-top:8px">18+ | Bet Responsibly | AI-Generated</div></div>`;
 }
-async function callGemini(prompt, useSearch, maxTok) {
-    const key = getGeminiKey();
-    if (!key) return null;
-    const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
-    const body = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: maxTok || 1200, temperature: 0.8 } };
-    try {
-        const r = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-        const d = await r.json();
-        if (!r.ok) return null;
-        const parts = d.candidates?.[0]?.content?.parts || [];
-        return parts.map(p => p.text || '').join('').trim() || null;
-    } catch(e) { return null; }
-}
+// ══════════════════════════════════════════════════════════════
+//  BACKEND CONFIG
+//  Set this to your deployed Render/Railway URL once it's live.
+//  Leave as empty string '' to disable backend features with a
+//  friendly message instead of a broken error.
+// ══════════════════════════════════════════════════════════════
+const BACKEND_URL = 'https://kitanga-backend.onrender.com';
 
-// Chat Functions
-let chatHistory = [];
-function botReady() { const dot = document.getElementById('botOnlineDot'); if (dot) dot.style.background = '#00E676'; }
+// Chat Functions — migrated from Gemini to OpenAI via secure backend
+let chatHistory = []; // Format: [{role:'user'|'assistant', content:'...'}]
+
+function botReady() {
+    const dot = document.getElementById('botOnlineDot');
+    if (dot) dot.style.background = BACKEND_URL ? '#00E676' : '#FFB800';
+}
 function addChatMsg(role, text) {
     const box = document.getElementById('chatMsgs');
     if (!box) return;
@@ -1704,6 +1758,7 @@ function addChatMsg(role, text) {
     box.scrollTop = box.scrollHeight;
 }
 function quickAsk(question) { document.getElementById('chatInp').value = question; sendChat(); }
+
 async function sendChat() {
     const inp = document.getElementById('chatInp');
     if (!inp) return;
@@ -1711,54 +1766,191 @@ async function sendChat() {
     if (!msg) return;
     inp.value = '';
     addChatMsg('user', msg);
-    const key = getGeminiKey();
-    if (!key) {
-        const isLocal = window.location.protocol !== 'https:';
-        addChatMsg('bot', isLocal
-            ? '⚠️ You are opening this file locally. Push index.html to GitHub Pages and open from your https:// URL — Gemini will work automatically.'
-            : '⚠️ Gemini API key not configured. Set it in the Admin Panel → Settings → AI Engine.');
+
+    if (!BACKEND_URL) {
+        addChatMsg('bot', '⚙️ Backend not yet connected. Deploy the Node.js server and set BACKEND_URL in index.html.');
         return;
     }
+
+    // Show typing indicator
     const typDiv = document.createElement('div');
     typDiv.className = 'cmsg typing';
     typDiv.textContent = '⚽ Thinking...';
     typDiv.id = 'chat-typing';
     const box = document.getElementById('chatMsgs');
     if (box) { box.appendChild(typDiv); box.scrollTop = box.scrollHeight; }
+
+    // Add message to history (keep last 20 turns to control token usage)
+    chatHistory.push({ role: 'user', content: msg });
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
     try {
-        const endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key;
-        // Syste
-        const persona = 'You are the Kitanga FC Football Bot — a passionate, expert football analyst based in Uganda. ' +
-            'You specialise in Premier League, La Liga, Bundesliga, Serie A, Champions League, and Ugandan football. ' +
-            'Keep answers to 3–5 sentences max. Use 1–2 football emojis per reply. Give clear confident predictions when asked.';
-        // Keep last 8 turns (4 exchanges) to limit token usage on mobile data
-        const recentHistory = chatHistory.slice(-8);
-        const contents = [
-            { role: 'user',  parts: [{ text: persona }] },
-            { role: 'model', parts: [{ text: '⚽ Ready! Ask me anything about football.' }] },
-            ...recentHistory,
-            { role: 'user',  parts: [{ text: msg }] }
-        ];
-        const resp = await fetch(endpoint, {
+        const resp = await fetch(`${BACKEND_URL}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: 500, temperature: 0.85 } })
+            body: JSON.stringify({ messages: chatHistory })
         });
         document.getElementById('chat-typing')?.remove();
         if (!resp.ok) {
-            const isLocal = window.location.protocol !== 'https:';
-            const msg = isLocal
-                ? '❌ Gemini is blocked on local files. Push to GitHub Pages and open from https:// — then it will work.'
-                : '❌ Service is currently down. Please try again later!';
-            addChatMsg('bot', msg); return;
+            if (resp.status === 429) { addChatMsg('bot', '⏳ Too many messages. Please wait a moment and try again.'); return; }
+            throw new Error('Backend error ' + resp.status);
         }
         const data = await resp.json();
-        const reply = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join('\n').trim() || '⚽ No response. Try again!';
+        const reply = data.reply || '⚽ No response received. Try again!';
         addChatMsg('bot', reply);
-        // Save exchange to history for context in the next message
-        chatHistory.push({ role: 'user',  parts: [{ text: msg   }] });
-        chatHistory.push({ role: 'model', parts: [{ text: reply }] });
-    } catch(err) { document.getElementById('chat-typing')?.remove(); addChatMsg('bot', '❌ Connection error. Check your internet connection.'); }
+        // Save assistant reply to history for context in next turn
+        chatHistory.push({ role: 'assistant', content: reply });
+    } catch(err) {
+        document.getElementById('chat-typing')?.remove();
+        addChatMsg('bot', '❌ Connection error. Check your internet and try again.');
+        console.error('Chat error:', err);
+    }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  CUSTOM PREDICTION GENERATOR
+// ══════════════════════════════════════════════════════════════
+async function getPrediction() {
+    const homeTeam = document.getElementById('pred-home-input')?.value.trim();
+    const awayTeam = document.getElementById('pred-away-input')?.value.trim();
+    const btn = document.getElementById('pred-gen-btn');
+    const btnIcon = document.getElementById('pred-btn-icon');
+    const btnText = document.getElementById('pred-btn-text');
+    const resultDiv = document.getElementById('pred-gen-result');
+
+    if (!homeTeam || !awayTeam) {
+        resultDiv.className = 'pred-gen-result visible';
+        resultDiv.innerHTML = '<div class="pred-gen-error">⚠️ Please enter both team names.</div>';
+        return;
+    }
+
+    if (!BACKEND_URL) {
+        resultDiv.className = 'pred-gen-result visible';
+        resultDiv.innerHTML = '<div class="pred-gen-error">⚙️ Backend not connected yet. Deploy the Node.js server and set BACKEND_URL.</div>';
+        return;
+    }
+
+    // Loading state
+    btn.disabled = true;
+    btnIcon.textContent = '⏳';
+    btnText.textContent = 'Analysing...';
+    resultDiv.className = 'pred-gen-result visible';
+    resultDiv.innerHTML = `<div class="pred-loading" style="padding:20px"><div class="pred-spinner"></div>Fetching form data for ${homeTeam} vs ${awayTeam}...</div>`;
+
+    try {
+        const resp = await fetch(`${BACKEND_URL}/api/predict`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ homeTeam, awayTeam })
+        });
+        if (!resp.ok) {
+            const err = await resp.json().catch(() => ({ error: 'Request failed.' }));
+            if (resp.status === 429) throw new Error('Rate limit reached. You can make 5 predictions per 15 minutes.');
+            throw new Error(err.error || 'Prediction failed.');
+        }
+        const data = await resp.json();
+        displayCustomPrediction(data, resultDiv);
+    } catch(err) {
+        resultDiv.innerHTML = `<div class="pred-gen-error">❌ ${err.message}</div>`;
+    } finally {
+        btn.disabled = false;
+        btnIcon.textContent = '🔮';
+        btnText.textContent = 'Predict';
+    }
+}
+
+function displayCustomPrediction({ match, prediction: p, rawData }, container) {
+    if (!p) { container.innerHTML = '<div class="pred-gen-error">❌ Could not parse prediction. Please try again.</div>'; return; }
+
+    const confColors = { Low:'#FF3D57', Medium:'#FFB800', High:'#00E676' };
+    const confBg     = { Low:'rgba(255,61,87,.15)', Medium:'rgba(255,184,0,.15)', High:'rgba(0,230,118,.15)' };
+    const cc = confColors[p.riskLevel] || confColors['Medium'];
+    const cb = confBg[p.riskLevel] || confBg['Medium'];
+
+    // Win probability widths
+    const hw = p.homeWinProbability || 33;
+    const dr = p.drawProbability || 34;
+    const aw = p.awayWinProbability || 33;
+
+    // Recent form rows for home team
+    const homeForm = rawData?.homeTeam?.recentForm || [];
+    const formRows = homeForm.map(f => `<tr>
+        <td>${f.date ? f.date.split('T')[0] : '—'}</td>
+        <td>${f.opponent || '—'}</td>
+        <td>${f.venue || '—'}</td>
+        <td>${f.score || '—'}</td>
+        <td class="result-${f.result}">${f.result}</td>
+    </tr>`).join('');
+
+    const keyFactors = (p.keyFactors || []).map(f => `<div class="pred-factor-item">▶ ${f}</div>`).join('');
+
+    container.innerHTML = `
+    <div class="pred-result-card">
+      <div class="pred-result-header">
+        <div class="pred-result-teams">${match.homeTeam} <span style="color:var(--grey);font-size:16px">vs</span> ${match.awayTeam}</div>
+        <span class="pred-result-conf" style="background:${cb};color:${cc}">${p.riskLevel?.toUpperCase() || 'MEDIUM'} RISK</span>
+      </div>
+
+      <div class="pred-prob-bars">
+        <div class="ppb" style="background:rgba(0,194,255,.12);border:1px solid rgba(0,194,255,.3);flex:${hw}">
+          <div class="ppb-pct" style="color:var(--accent)">${hw}%</div>
+          <div class="ppb-lbl">HOME</div>
+        </div>
+        <div class="ppb" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);flex:${dr}">
+          <div class="ppb-pct" style="color:var(--grey)">${dr}%</div>
+          <div class="ppb-lbl">DRAW</div>
+        </div>
+        <div class="ppb" style="background:rgba(255,61,87,.08);border:1px solid rgba(255,61,87,.2);flex:${aw}">
+          <div class="ppb-pct" style="color:var(--red)">${aw}%</div>
+          <div class="ppb-lbl">AWAY</div>
+        </div>
+      </div>
+
+      <div class="pred-details-row">
+        <div class="pred-detail-box">
+          <div class="pred-detail-val" style="color:var(--gold)">${p.predictedWinner || '—'}</div>
+          <div class="pred-detail-lbl">PREDICTED WINNER</div>
+        </div>
+        <div class="pred-detail-box">
+          <div class="pred-detail-val">${p.scoreline || '—'}</div>
+          <div class="pred-detail-lbl">SCORELINE</div>
+        </div>
+        <div class="pred-detail-box">
+          <div class="pred-detail-val" style="color:${cc}">${p.confidence || 0}%</div>
+          <div class="pred-detail-lbl">CONFIDENCE</div>
+        </div>
+        <div class="pred-detail-box">
+          <div class="pred-detail-val" style="color:${p.btts ? 'var(--green)' : 'var(--red)'}">${p.btts ? 'YES' : 'NO'}</div>
+          <div class="pred-detail-lbl">BTTS</div>
+        </div>
+        <div class="pred-detail-box">
+          <div class="pred-detail-val" style="color:${p.over25Goals ? 'var(--green)' : 'var(--red)'}">${p.over25Goals ? 'YES' : 'NO'}</div>
+          <div class="pred-detail-lbl">OVER 2.5</div>
+        </div>
+      </div>
+
+      ${keyFactors ? `<div class="pred-factors"><h4>🔑 KEY FACTORS</h4>${keyFactors}</div>` : ''}
+
+      <div class="pred-reasoning">${p.reasoning || 'No reasoning provided.'}</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+        <a href="https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/" target="_blank" rel="sponsored noopener" class="pred-bet-btn" style="background:#1a73e8;color:#fff;text-align:center;padding:10px;border-radius:6px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px">🎰 Bet on 1xBet</a>
+        <a href="https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/" target="_blank" rel="sponsored noopener" class="pred-bet-btn" style="background:rgba(255,184,0,.1);color:var(--gold);border:1px solid rgba(255,184,0,.3);text-align:center;padding:10px;border-radius:6px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px">💰 Bet on MelBet</a>
+      </div>
+
+      ${homeForm.length ? `
+      <button class="pred-form-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.textContent=this.nextElementSibling.classList.contains('open')?'▲ Hide Recent Form':'▼ Show Recent Form (${match.homeTeam})'">▼ Show Recent Form (${match.homeTeam})</button>
+      <div class="pred-form-section">
+        <table class="pred-form-table">
+          <thead><tr><th>Date</th><th>Opponent</th><th>Venue</th><th>Score</th><th>Result</th></tr></thead>
+          <tbody>${formRows}</tbody>
+        </table>
+      </div>` : ''}
+
+      <div style="font-size:9px;color:var(--grey);text-align:center;margin-top:12px">
+        ⚠️ 18+ only · AI-generated · Bet responsibly · Generated ${new Date(match.generatedAt).toLocaleString()}
+      </div>
+    </div>`;
 }
 
 // Legal Modals

@@ -954,7 +954,7 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
     <h2>Data Retention</h2>
     <p>Fan reviews and contact submissions are stored until manually deleted by the site administrator. You may request deletion by contacting us.</p>
     <h2>Your Rights</h2>
-    <p>You have the right to access, correct or delete any personal data we hold about you. Contact us at <a href="/cdn-cgi/l/email-protection#4a2e2f2b262f322b242e2f38787a7a7b0a2d272b232664292527"><span class="__cf_email__" data-cfemail="c8acada9a4adb0a9a6acadbafaf8f8f988afa5a9a1a4e6aba7a5">dealexander2001@gmail.com</span></a> or WhatsApp <a href="https://wa.me/256750162429">+256 750 162 429</a>.</p>
+    <p>You have the right to access, correct or delete any personal data we hold about you. Contact us at <a href="/cdn-cgi/l/email-protection#4a2e2f2b262f322b242e2f38787a7a7b0a2d272b232664292527"><span class="__cf_email__" data-cfemail="c8acada9a4adb0a9a6acadbafaf8f8f988afa5a9a1a4e6aba7a5">[email&#160;protected]</span></a> or WhatsApp <a href="https://wa.me/256750162429">+256 750 162 429</a>.</p>
     <h2>Changes to This Policy</h2>
     <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
     <p class="legal-last-updated">Last updated: April 10, 2026 | Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7511101419100d141b11100747454544351218141c195b161a18">dealexander2001@gmail.com</a></p>
@@ -1695,8 +1695,11 @@ async function fetchAIPredictions() {
         if (cached && Date.now() - ts < MINS * 60000 && cachedDate === today) {
             const preds = JSON.parse(cached);
             if (preds && preds.length) {
-                const BETS = [{ name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' }, { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }, { name:'Betpawa', url:'https://www.betpawa.com', color:'#d4a017' }, { name:'Bwin', url:'https://www.bwin.com', color:'#0077cc' }];
-                grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i % BETS.length], BETS[(i+1) % BETS.length])).join('');
+                const BETS = [
+                    { name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' },
+                    { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }
+                ];
+                grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i%2], BETS[(i+1)%2])).join('');
                 return;
             }
         }
@@ -1718,8 +1721,11 @@ async function fetchAIPredictions() {
         localStorage.setItem(CACHE, JSON.stringify(preds));
         localStorage.setItem(CTIME, Date.now().toString());
         localStorage.setItem('kfc_preds_date', today);
-        const BETS = [{ name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' }, { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }, { name:'Betpawa', url:'https://www.betpawa.com', color:'#d4a017' }, { name:'Bwin', url:'https://www.bwin.com', color:'#0077cc' }];
-        grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i % BETS.length], BETS[(i+1) % BETS.length])).join('');
+        const BETS = [
+            { name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' },
+            { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }
+        ];
+        grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i%2], BETS[(i+1)%2])).join('');
     } catch(err) {
         console.error('Daily predictions error:', err);
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load predictions. <button onclick="fetchAIPredictions()" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer;margin-left:8px">⟳ Retry</button></div>`;
@@ -2130,8 +2136,15 @@ function renderScores() {
     if (!filtered.length) {
         const leagueName = activeLeague === 'all' ? 'any league' : (LEAGUE_NAMES[activeLeague] || 'this league');
         grid.innerHTML = `<div class="scores-empty">
-            <div>No matches today for <strong>${leagueName}</strong>.</div>
-            <div style="font-size:12px;margin-top:6px;color:var(--grey)">Check back on matchday or try another league.</div>
+            <div style="font-size:32px;margin-bottom:10px">⏰</div>
+            <div style="font-size:15px;font-weight:600;color:var(--white);margin-bottom:8px">No live matches right now for ${leagueName}</div>
+            <div style="font-size:12px;color:var(--grey);line-height:1.8">
+                Today's kick-off times (EAT):<br>
+                🇪🇸 La Liga from <strong style="color:var(--accent)">3:00pm</strong> &nbsp;·&nbsp;
+                🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League from <strong style="color:var(--accent)">5:00pm</strong><br>
+                🏆 FA Cup at <strong style="color:var(--accent)">7:15pm</strong>
+            </div>
+            <button onclick="fetchLiveScores(true)" style="margin-top:14px;background:var(--accent);border:none;color:var(--dark);padding:9px 20px;border-radius:6px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer">⟳ Refresh</button>
         </div>`;
         return;
     }

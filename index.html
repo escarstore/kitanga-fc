@@ -954,7 +954,7 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
     <h2>Data Retention</h2>
     <p>Fan reviews and contact submissions are stored until manually deleted by the site administrator. You may request deletion by contacting us.</p>
     <h2>Your Rights</h2>
-    <p>You have the right to access, correct or delete any personal data we hold about you. Contact us at <a href="/cdn-cgi/l/email-protection#4a2e2f2b262f322b242e2f38787a7a7b0a2d272b232664292527"><span class="__cf_email__" data-cfemail="c8acada9a4adb0a9a6acadbafaf8f8f988afa5a9a1a4e6aba7a5">dealexander2001@gmail.com</span></a> or WhatsApp <a href="https://wa.me/256750162429">+256 750 162 429</a>.</p>
+    <p>You have the right to access, correct or delete any personal data we hold about you. Contact us at <a href="/cdn-cgi/l/email-protection#4a2e2f2b262f322b242e2f38787a7a7b0a2d272b232664292527"><span class="__cf_email__" data-cfemail="c8acada9a4adb0a9a6acadbafaf8f8f988afa5a9a1a4e6aba7a5">[email&#160;protected]</span></a> or WhatsApp <a href="https://wa.me/256750162429">+256 750 162 429</a>.</p>
     <h2>Changes to This Policy</h2>
     <p>We may update this policy from time to time. Changes will be posted on this page with an updated date.</p>
     <p class="legal-last-updated">Last updated: April 10, 2026 | Contact: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7511101419100d141b11100747454544351218141c195b161a18">dealexander2001@gmail.com</a></p>
@@ -2034,35 +2034,49 @@ async function fetchLiveScores(force) {
         return;
     }
 
-    // Fetch today's fixtures for all leagues in parallel (one request each)
-    const today = new Date().toISOString().slice(0, 10);
-    // Season logic: Aug+ = this year's season, Jan-Jul = last year's season
-    const _now = new Date();
-    const season = _now.getMonth() >= 7 ? _now.getFullYear() : _now.getFullYear() - 1;
+    // Fetch LIVE matches + next upcoming fixtures
+    const key2 = getFootballKey();
+
+    // Step 1: Get all currently LIVE matches across all leagues
+    const liveRes = await fetch(`https://v3.football.api-sports.io/fixtures?live=all`, {
+        headers: { 'x-apisports-key': key }
+    }).then(r => r.ok ? r.json() : null).catch(() => null);
+
+    // Step 2: Get next 3 upcoming fixtures per league
     const fetches = LEAGUE_IDS.map(lid =>
-        fetch(`https://v3.football.api-sports.io/fixtures?league=${lid}&season=${season}&date=${today}`, {
-            headers: {
-                'x-apisports-key': key
-            }
+        fetch(`https://v3.football.api-sports.io/fixtures?league=${lid}&next=3`, {
+            headers: { 'x-apisports-key': key }
         })
         .then(r => r.ok ? r.json() : null)
         .catch(() => null)
     );
 
-    const results = await Promise.allSettled(fetches);
     allScoreData = [];
 
+    // Add live matches first
+    if (liveRes?.response?.length) {
+        liveRes.response.forEach(fix => {
+            if (LEAGUE_IDS.includes(fix.league.id)) {
+                allScoreData.push(normalizeFixture(fix, fix.league.id));
+            }
+        });
+    }
+
+    // Add upcoming scheduled matches (no duplicates)
+    const results = await Promise.allSettled(fetches);
     results.forEach((res, i) => {
         if (res.status === 'fulfilled' && res.value?.response) {
             res.value.response.forEach(fix => {
-                allScoreData.push(normalizeFixture(fix, LEAGUE_IDS[i]));
+                if (!allScoreData.find(m => m.id === fix.fixture.id)) {
+                    allScoreData.push(normalizeFixture(fix, LEAGUE_IDS[i]));
+                }
             });
         }
     });
 
-    // Sort: LIVE first → FT → upcoming by time
+    // Sort: LIVE first → NS by kickoff time → FT last
     allScoreData.sort((a, b) => {
-        const order = { LIVE: 0, FT: 1, NS: 2 };
+        const order = { LIVE: 0, NS: 1, FT: 2 };
         const ao = order[a.statusGroup] ?? 3;
         const bo = order[b.statusGroup] ?? 3;
         return ao !== bo ? ao - bo : a.kickoffTs - b.kickoffTs;

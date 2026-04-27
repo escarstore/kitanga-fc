@@ -1840,12 +1840,21 @@ async function fetchAIPredictions(force) {
         // Step 1: Get real fixtures from api-sports
         const fixtures = await fetchRealFixtures();
 
-        // Step 2: Send to backend with real fixture list
-        const resp = await fetch(`${BACKEND_URL}/api/daily-predictions`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fixtures: fixtures.length ? fixtures : null })
-        });
+        // Step 2: Send to backend — try POST first, fall back to GET
+        let resp;
+        try {
+            resp = await fetch(`${BACKEND_URL}/api/daily-predictions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fixtures: fixtures.length ? fixtures : null })
+            });
+            // If server doesn't support POST, try GET
+            if (resp.status === 404 || resp.status === 405) {
+                resp = await fetch(`${BACKEND_URL}/api/daily-predictions`);
+            }
+        } catch(e) {
+            resp = await fetch(`${BACKEND_URL}/api/daily-predictions`);
+        }
         if (!resp.ok) throw new Error('Backend error ' + resp.status);
         const data = await resp.json();
         const preds = data.predictions;

@@ -561,21 +561,48 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
 .pred-form-toggle:hover{border-color:var(--accent);color:var(--accent)}
 .pred-form-section{display:none;margin-top:10px}
 .pred-form-section.open{display:block}
-/* PWA INSTALL BANNER */
-#pwa-banner{position:fixed;bottom:0;left:0;right:0;z-index:9998;background:linear-gradient(135deg,#05122a,#0a1f6e);border-top:2px solid var(--gold);padding:14px 18px;display:flex;align-items:center;gap:14px;transform:translateY(100%);transition:transform .45s cubic-bezier(.23,1,.32,1);box-shadow:0 -6px 32px rgba(0,0,0,.6)}
+
+/* ── FLOATING INSTALL BUTTON ────────────────────────────── */
+#pwa-fab{position:fixed;bottom:24px;right:20px;z-index:9990;display:none;flex-direction:column;align-items:center;gap:5px;cursor:pointer;animation:fabBounce 2.5s ease-in-out infinite}
+#pwa-fab img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 4px 20px rgba(255,184,0,.5),0 0 0 0 rgba(255,184,0,.4);animation:fabPulse 2s ease-in-out infinite}
+#pwa-fab-lbl{background:var(--gold);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;padding:3px 8px;border-radius:10px;white-space:nowrap;box-shadow:0 2px 8px rgba(255,184,0,.4)}
+@keyframes fabPulse{0%{box-shadow:0 4px 20px rgba(255,184,0,.5),0 0 0 0 rgba(255,184,0,.4)}70%{box-shadow:0 4px 20px rgba(255,184,0,.5),0 0 0 14px rgba(255,184,0,0)}100%{box-shadow:0 4px 20px rgba(255,184,0,.5),0 0 0 0 rgba(255,184,0,0)}}
+@keyframes fabBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* ── INSTALL BANNER ──────────────────────────────────────── */
+#pwa-banner{position:fixed;bottom:0;left:0;right:0;z-index:9991;background:linear-gradient(135deg,#05122a,#0d1f5e);border-top:2px solid var(--gold);padding:14px 18px 20px;display:flex;align-items:center;gap:14px;transform:translateY(100%);transition:transform .45s cubic-bezier(.23,1,.32,1);box-shadow:0 -6px 32px rgba(0,0,0,.7)}
 #pwa-banner.show{transform:translateY(0)}
 .pwa-logo{width:48px;height:48px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--gold);box-shadow:0 0 12px rgba(255,184,0,.3)}
-.pwa-text{flex:1;min-width:0}
-.pwa-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;color:var(--white);line-height:1.1}
-.pwa-sub{font-size:11px;color:var(--grey);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pwa-text{flex:1}
+.pwa-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--white);line-height:1}
+.pwa-sub{font-size:11px;color:var(--grey);margin-top:3px}
 .pwa-btns{display:flex;gap:8px;flex-shrink:0}
-.pwa-btn-install{background:var(--gold);color:#000;border:none;padding:9px 18px;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity .2s}
+.pwa-btn-install{background:var(--gold);color:#000;border:none;padding:10px 18px;border-radius:7px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:opacity .2s}
 .pwa-btn-install:hover{opacity:.85}
-.pwa-btn-dismiss{background:rgba(255,255,255,.07);color:var(--grey);border:1px solid rgba(255,255,255,.12);padding:9px 12px;border-radius:7px;font-size:14px;cursor:pointer;line-height:1}
+.pwa-btn-dismiss{background:rgba(255,255,255,.07);color:var(--grey);border:1px solid rgba(255,255,255,.15);padding:10px 12px;border-radius:7px;font-size:15px;cursor:pointer}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
+
+<!-- FLOATING INSTALL BUTTON -->
+<div id="pwa-fab" onclick="showInstallBanner()">
+  <img src="logo.png" alt="Install AL Sports">
+  <span id="pwa-fab-lbl">📲 INSTALL APP</span>
+</div>
+
+<!-- INSTALL BANNER (slides up when FAB tapped or auto) -->
+<div id="pwa-banner">
+  <img src="logo.png" alt="AL Sports" class="pwa-logo">
+  <div class="pwa-text">
+    <div class="pwa-title">Install AL Sports</div>
+    <div class="pwa-sub">Free predictions & live scores — on your home screen</div>
+  </div>
+  <div class="pwa-btns">
+    <button class="pwa-btn-install" onclick="installPWA()">📲 Install</button>
+    <button class="pwa-btn-dismiss" onclick="dismissPWA()">✕</button>
+  </div>
+</div>
 <!-- PAGE LOADER -->
 <div id="page-loader">
   <div class="loader-pitch"></div>
@@ -607,7 +634,6 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('reviews')">Fan Zone</a></li>
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('about')">About</a></li>
       <li><a href="javascript:void(0)" onclick="closeNav();scrollToSection('sponsorship')" class="nav-watch">Partner →</a></li>
-      <li id="nav-install-li" style="display:none"><a href="javascript:void(0)" onclick="closeNav();installPWA()" style="color:var(--gold) !important;font-weight:700">📲 Install App</a></li>
     </ul>
   </div>
 </nav>
@@ -627,19 +653,6 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
 
 <!-- HERO SECTION -->
 <div id="kfc-toast-el" class="kfc-toast"></div>
-
-<!-- PWA INSTALL BANNER — shows on first visit -->
-<div id="pwa-banner">
-  <img src="logo.png" alt="AL Sports" class="pwa-logo">
-  <div class="pwa-text">
-    <div class="pwa-title">Install AL Sports</div>
-    <div class="pwa-sub">Free predictions & live scores on your home screen</div>
-  </div>
-  <div class="pwa-btns">
-    <button class="pwa-btn-install" onclick="installPWA()">📲 Install</button>
-    <button class="pwa-btn-dismiss" onclick="dismissPWA()">✕</button>
-  </div>
-</div>
 <section id="hero">
   <div class="hero-content">
     <div class="hero-tag">AI Football Predictions & Live Scores</div>
@@ -1743,53 +1756,213 @@ function renderNewsCards(items) {
         </${tag}>`;
     }).join('');
 }
-async function fetchAIPredictions() {
+// ══════════════════════════════════════════════════════════════
+// PREDICTIONS — Fully Automatic
+// 1. Fetches REAL upcoming fixtures from api-sports (no hardcoding)
+// 2. Sends to backend for AI analysis
+// 3. Every 5 min: checks live scores for FT matches → removes them
+// 4. When all predictions done → auto-fetches fresh ones
+// ══════════════════════════════════════════════════════════════
+const PRED_BETS = [
+    { name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' },
+    { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }
+];
+let activePredictions = []; // currently shown predictions
+let predRefreshTimer = null;
+
+async function fetchRealFixtures() {
+    // Fetch next 5 upcoming fixtures for top leagues using api-sports
+    const key = getFootballKey();
+    if (!key) return [];
+    const leagueIds = [39, 140, 2, 78, 135, 61, 3]; // PL, LaLiga, UCL, Bundesliga, SerieA, Ligue1, EL
+    try {
+        const results = await Promise.allSettled(
+            leagueIds.map(lid =>
+                fetch(`https://v3.football.api-sports.io/fixtures?league=${lid}&next=5`, {
+                    headers: { 'x-apisports-key': key }
+                }).then(r => r.json()).catch(() => ({ response: [] }))
+            )
+        );
+        const fixtures = results.flatMap((r, i) => {
+            if (r.status !== 'fulfilled') return [];
+            return (r.value?.response || []).map(f => ({
+                id: f.fixture.id,
+                home: f.teams.home.name,
+                away: f.teams.away.name,
+                comp: f.league.name,
+                date: f.fixture.date?.slice(0, 10) || '',
+                kickoff: f.fixture.date,
+                leagueId: leagueIds[i]
+            }));
+        });
+        // Sort by kickoff time, pick first 8 most upcoming
+        fixtures.sort((a, b) => new Date(a.kickoff) - new Date(b.kickoff));
+        console.log(`Fetched ${fixtures.length} real upcoming fixtures from api-sports`);
+        return fixtures.slice(0, 8);
+    } catch(e) {
+        console.warn('Fixture fetch failed:', e.message);
+        return [];
+    }
+}
+
+async function fetchAIPredictions(force) {
     const grid = document.getElementById('predictions-grid');
     if (!grid) return;
-    const CACHE = 'kfc_preds_v5', CTIME = 'kfc_preds_ts_v5', MINS = 60;
+    const CACHE = 'kfc_preds_v7', CTIME = 'kfc_preds_ts_v7';
     const today = new Date().toISOString().slice(0, 10);
-    try {
-        const cached = localStorage.getItem(CACHE);
-        const ts = parseInt(localStorage.getItem(CTIME) || '0');
-        const cachedDate = localStorage.getItem('kfc_preds_date');
-        // Only use cache if: not expired AND it was generated today
-        if (cached && Date.now() - ts < MINS * 60000 && cachedDate === today) {
-            const preds = JSON.parse(cached);
-            if (preds && preds.length) {
-                const BETS = [
-                    { name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' },
-                    { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }
-                ];
-                grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i%2], BETS[(i+1)%2])).join('');
-                return;
+
+    // Use cache if valid and not forced
+    if (!force) {
+        try {
+            const cached = localStorage.getItem(CACHE);
+            const ts = parseInt(localStorage.getItem(CTIME) || '0');
+            const cachedDate = localStorage.getItem('kfc_preds_date_v7');
+            if (cached && Date.now() - ts < 60 * 60000 && cachedDate === today) {
+                const preds = JSON.parse(cached);
+                if (preds && preds.length) {
+                    activePredictions = preds;
+                    renderPredictions(preds, grid);
+                    schedulePredictionCheck();
+                    return;
+                }
             }
-        }
-    } catch(e) {}
+        } catch(e) {}
+    }
+
     if (!BACKEND_URL) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)"><div style="font-size:36px;margin-bottom:12px">🔧</div><div>Backend not configured. Set BACKEND_URL in the script.</div></div>';
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">🔧 Backend not configured.</div>';
         return;
     }
-    grid.innerHTML = '<div class="pred-loading"><div class="pred-spinner"></div>Generating AI predictions...</div>';
+
+    grid.innerHTML = '<div class="pred-loading"><div class="pred-spinner"></div>Fetching today\'s real fixtures...</div>';
+
     try {
+        // Step 1: Get real fixtures from api-sports
+        const fixtures = await fetchRealFixtures();
+
+        // Step 2: Send to backend with real fixture list
         const resp = await fetch(`${BACKEND_URL}/api/daily-predictions`, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fixtures: fixtures.length ? fixtures : null })
         });
         if (!resp.ok) throw new Error('Backend error ' + resp.status);
         const data = await resp.json();
         const preds = data.predictions;
         if (!preds || !preds.length) throw new Error('No predictions returned');
+
+        // Attach fixture IDs so we can cross-reference with live scores
+        preds.forEach((p, i) => {
+            p._fixtureId = fixtures[i]?.id || null;
+            p._id = `pred_${Date.now()}_${i}`;
+        });
+
+        activePredictions = preds;
         localStorage.setItem(CACHE, JSON.stringify(preds));
         localStorage.setItem(CTIME, Date.now().toString());
-        localStorage.setItem('kfc_preds_date', today);
-        const BETS = [
-            { name:'1xBet', url:'https://reffpa.com/L?tag=d_5500916m_97c_Kitanga_FC&site=5500916&ad=97&r=registration/', color:'#1a73e8' },
-            { name:'MelBet', url:'https://refpa3665.com/L?tag=d_5503059m_2170c_Kitanga_FC&site=5503059&ad=2170&r=registration/', color:'#e53935' }
-        ];
-        grid.innerHTML = preds.map((p, i) => buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct, p.prediction, p.analysis, p.confidence, p.tip, BETS[i%2], BETS[(i+1)%2])).join('');
+        localStorage.setItem('kfc_preds_date_v7', today);
+        renderPredictions(preds, grid);
+        schedulePredictionCheck();
+
     } catch(err) {
         console.error('Daily predictions error:', err);
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load predictions. <button onclick="fetchAIPredictions()" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer;margin-left:8px">⟳ Retry</button></div>`;
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--grey)">Could not load predictions. <button onclick="fetchAIPredictions(true)" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer;margin-left:8px">⟳ Retry</button></div>`;
+    }
+}
+
+function renderPredictions(preds, grid) {
+    if (!preds || !preds.length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--grey)">
+            <div style="font-size:36px;margin-bottom:12px">✅</div>
+            <div style="font-size:15px;font-weight:600;color:var(--white);margin-bottom:8px">All predicted matches have finished!</div>
+            <div style="font-size:13px;color:var(--grey);margin-bottom:16px">Fetching fresh upcoming predictions...</div>
+        </div>`;
+        // Auto-fetch fresh predictions after 3 seconds
+        setTimeout(() => {
+            localStorage.removeItem('kfc_preds_v7');
+            localStorage.removeItem('kfc_preds_ts_v7');
+            fetchAIPredictions(true);
+        }, 3000);
+        return;
+    }
+    grid.innerHTML = preds.map((p, i) =>
+        `<div class="pred-card" id="${p._id || 'pred_' + i}" style="transition:opacity .6s ease,transform .6s ease">` +
+        buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct,
+            p.prediction, p.analysis, p.confidence, p.tip,
+            PRED_BETS[i%2], PRED_BETS[(i+1)%2]).replace('<div class="pred-card">', '') +
+        '</div>'
+    ).join('');
+}
+
+function schedulePredictionCheck() {
+    if (predRefreshTimer) clearInterval(predRefreshTimer);
+    // Check every 5 minutes if any predictions are done
+    predRefreshTimer = setInterval(checkFinishedPredictions, 5 * 60 * 1000);
+}
+
+async function checkFinishedPredictions() {
+    if (!activePredictions.length) return;
+    const key = getFootballKey();
+    if (!key) return;
+
+    try {
+        // Fetch live scores to check match statuses
+        const liveResp = await fetch('https://v3.football.api-sports.io/fixtures?live=all', {
+            headers: { 'x-apisports-key': key }
+        }).then(r => r.json()).catch(() => ({ response: [] }));
+
+        const ftStatuses = ['FT', 'AET', 'PEN', 'SUSP', 'AWD', 'WO'];
+        const finishedIds = new Set(
+            (liveResp.response || [])
+                .filter(f => ftStatuses.includes(f.fixture.status.short))
+                .map(f => f.fixture.id)
+        );
+
+        // Also check: if match date+time is more than 3 hours past, assume finished
+        const nowTs = Date.now();
+        let removed = 0;
+
+        activePredictions = activePredictions.filter(p => {
+            // Check by fixture ID against live scores
+            if (p._fixtureId && finishedIds.has(p._fixtureId)) {
+                fadeOutPred(p._id || '');
+                removed++;
+                return false;
+            }
+            // Check by date — if match was yesterday or earlier, remove
+            if (p.date) {
+                const matchDate = new Date(p.date + 'T23:59:00');
+                if (matchDate.getTime() < nowTs - 24 * 60 * 60000) {
+                    fadeOutPred(p._id || '');
+                    removed++;
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        if (removed > 0) {
+            console.log(`Removed ${removed} finished predictions`);
+            // Update cache with remaining predictions
+            localStorage.setItem('kfc_preds_v7', JSON.stringify(activePredictions));
+
+            // Wait for fade animation, then re-render
+            setTimeout(() => {
+                const grid = document.getElementById('predictions-grid');
+                if (grid) renderPredictions(activePredictions, grid);
+            }, 700);
+        }
+    } catch(e) {
+        console.warn('Prediction check error:', e.message);
+    }
+}
+
+function fadeOutPred(id) {
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (el) {
+        el.style.opacity = '0';
+        el.style.transform = 'scale(0.95)';
     }
 }
 function buildPredCard(m, hw, dr, aw, pred, analysis, conf, tip, bet1, bet2) {
@@ -2068,73 +2241,73 @@ async function init() {
 }
 // ── PWA INSTALL ───────────────────────────────────────────────
 let deferredPrompt = null;
+const PWA_KEY = 'al_pwa_installed';
 
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    if (!localStorage.getItem('pwa_dismissed')) {
-        setTimeout(showPWABanner, 2500);
-    }
-});
-
-function showPWABanner() {
+function showPWAFab() {
+    if (localStorage.getItem(PWA_KEY)) return; // already installed
+    const fab = document.getElementById('pwa-fab');
+    if (fab) fab.style.display = 'flex';
+}
+function showInstallBanner() {
     const banner = document.getElementById('pwa-banner');
     if (banner) banner.classList.add('show');
-    const li = document.getElementById('nav-install-li');
-    if (li) li.style.display = 'block';
 }
-
-// Show banner even on browsers that don't fire beforeinstallprompt
-// so user gets the manual "Add to Home Screen" guide
-window.addEventListener('load', () => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if (!isStandalone && !localStorage.getItem('pwa_dismissed')) {
-        setTimeout(showPWABanner, 3000);
-    }
-});
-
+function dismissPWA() {
+    document.getElementById('pwa-banner')?.classList.remove('show');
+}
 async function installPWA() {
     document.getElementById('pwa-banner')?.classList.remove('show');
     if (deferredPrompt) {
-        // Chrome/Edge — native install dialog
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
         deferredPrompt = null;
         if (outcome === 'accepted') {
-            localStorage.setItem('pwa_dismissed', '1');
-            toast('🎉 AL Sports installed!', 'success');
+            localStorage.setItem(PWA_KEY, '1');
+            document.getElementById('pwa-fab').style.display = 'none';
+            toast('🎉 AL Sports installed on your home screen!', 'success');
         }
     } else {
-        // Safari/others — show manual instructions
+        // No native prompt — show manual instructions
         const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-        if (isIOS) {
-            toast('Tap Share → "Add to Home Screen"', 'success');
-        } else {
-            toast('Tap ⋮ menu → "Add to Home screen"', 'success');
-        }
+        toast(isIOS ? 'Tap Share ↗ → "Add to Home Screen"' : 'Tap ⋮ menu → "Add to Home screen"', 'success');
     }
 }
 
-function dismissPWA() {
-    document.getElementById('pwa-banner')?.classList.remove('show');
-    localStorage.setItem('pwa_dismissed', '1');
-}
-
-window.addEventListener('appinstalled', () => {
-    document.getElementById('pwa-banner')?.classList.remove('show');
-    const li = document.getElementById('nav-install-li');
-    if (li) li.style.display = 'none';
-    deferredPrompt = null;
+// Capture the install prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    // Show FAB after 2 seconds
+    if (!localStorage.getItem(PWA_KEY)) {
+        setTimeout(showPWAFab, 2000);
+        // Also auto-show banner after 4 seconds on first ever visit
+        if (!sessionStorage.getItem('pwa_banner_shown')) {
+            setTimeout(() => {
+                showInstallBanner();
+                sessionStorage.setItem('pwa_banner_shown', '1');
+            }, 4000);
+        }
+    }
 });
 
-// Register service worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-}
+// Also show FAB if already installable (page reload after SW registered)
+window.addEventListener('load', () => {
+    if (!localStorage.getItem(PWA_KEY)) {
+        setTimeout(showPWAFab, 3000);
+    }
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+});
 
-// Clear old broken scores cache
-localStorage.removeItem('kfc_scores_v1');
-localStorage.removeItem('kfc_scores_ts_v1');
+window.addEventListener('appinstalled', () => {
+    localStorage.setItem(PWA_KEY, '1');
+    document.getElementById('pwa-fab').style.display = 'none';
+    document.getElementById('pwa-banner')?.classList.remove('show');
+    deferredPrompt = null;
+    toast('🎉 AL Sports installed!', 'success');
+});
 
 init();
 
@@ -2167,11 +2340,11 @@ let scoresTimer    = null;
 let hasLiveMatches = false;
 
 async function fetchLiveScores(force) {
-    const CACHE = 'kfc_scores_v2', CTIME = 'kfc_scores_ts_v2', MINS = 2; // 2 min cache for live
+    const CACHE = 'kfc_scores_v1', CTIME = 'kfc_scores_ts_v1', MINS = 5;
     const grid = document.getElementById('scores-grid');
     if (!grid) return;
 
-    // Use cache only for non-forced refreshes and within 2 minutes
+    // Cache check (saves daily API quota)
     if (!force) {
         try {
             const cached = localStorage.getItem(CACHE);
@@ -2189,64 +2362,48 @@ async function fetchLiveScores(force) {
 
     const key = getFootballKey();
     if (!key) {
-        grid.innerHTML = '<div class="scores-empty">API key not configured.</div>';
+        grid.innerHTML = '<div class="scores-empty">API-Football key not configured.</div>';
         return;
     }
+
+    // Fetch today's fixtures for all leagues in parallel (one request each)
+    const today = new Date().toISOString().slice(0, 10);
+    // Season logic: Aug+ = this year's season, Jan-Jul = last year's season
+    const _now = new Date();
+    const season = _now.getMonth() >= 7 ? _now.getFullYear() : _now.getFullYear() - 1;
+    const fetches = LEAGUE_IDS.map(lid =>
+        fetch(`https://v3.football.api-sports.io/fixtures?league=${lid}&season=${season}&date=${today}`, {
+            headers: {
+                'x-apisports-key': key
+            }
+        })
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+    );
+
+    const results = await Promise.allSettled(fetches);
+    allScoreData = [];
+
+    results.forEach((res, i) => {
+        if (res.status === 'fulfilled' && res.value?.response) {
+            res.value.response.forEach(fix => {
+                allScoreData.push(normalizeFixture(fix, LEAGUE_IDS[i]));
+            });
+        }
+    });
+
+    // Sort: LIVE first → FT → upcoming by time
+    allScoreData.sort((a, b) => {
+        const order = { LIVE: 0, FT: 1, NS: 2 };
+        const ao = order[a.statusGroup] ?? 3;
+        const bo = order[b.statusGroup] ?? 3;
+        return ao !== bo ? ao - bo : a.kickoffTs - b.kickoffTs;
+    });
 
     try {
-        // Step 1: Fetch ALL currently LIVE matches (works on free plan)
-        const liveResp = await fetch('https://v3.football.api-sports.io/fixtures?live=all', {
-            headers: { 'x-apisports-key': key }
-        }).then(r => r.ok ? r.json() : { response: [] }).catch(() => ({ response: [] }));
-
-        // Step 2: Fetch next upcoming fixtures per league (works on free plan)
-        const upcomingFetches = LEAGUE_IDS.map(lid =>
-            fetch(`https://v3.football.api-sports.io/fixtures?league=${lid}&next=3`, {
-                headers: { 'x-apisports-key': key }
-            }).then(r => r.ok ? r.json() : { response: [] }).catch(() => ({ response: [] }))
-        );
-        const upcomingResults = await Promise.allSettled(upcomingFetches);
-
-        allScoreData = [];
-        const liveIds = new Set();
-
-        // Add live matches first
-        (liveResp.response || []).forEach(fix => {
-            if (LEAGUE_IDS.includes(fix.league.id)) {
-                liveIds.add(fix.fixture.id);
-                allScoreData.push(normalizeFixture(fix, fix.league.id));
-            }
-        });
-
-        // Add upcoming (no duplicates with live)
-        upcomingResults.forEach((res, i) => {
-            if (res.status === 'fulfilled' && res.value?.response) {
-                res.value.response.forEach(fix => {
-                    if (!liveIds.has(fix.fixture.id)) {
-                        allScoreData.push(normalizeFixture(fix, LEAGUE_IDS[i]));
-                    }
-                });
-            }
-        });
-
-        // Sort: LIVE first → NS by time → FT last
-        allScoreData.sort((a, b) => {
-            const order = { LIVE: 0, NS: 1, FT: 2 };
-            const ao = order[a.statusGroup] ?? 3;
-            const bo = order[b.statusGroup] ?? 3;
-            return ao !== bo ? ao - bo : a.kickoffTs - b.kickoffTs;
-        });
-
-        try {
-            localStorage.setItem(CACHE, JSON.stringify(allScoreData));
-            localStorage.setItem(CTIME, Date.now().toString());
-        } catch(e) {}
-
-    } catch(err) {
-        console.error('Live scores error:', err);
-        grid.innerHTML = `<div class="scores-empty">Could not load scores. <button onclick="fetchLiveScores(true)" style="background:var(--accent);border:none;color:var(--dark);padding:8px 16px;border-radius:5px;cursor:pointer;margin-left:8px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:2px">⟳ Retry</button></div>`;
-        return;
-    }
+        localStorage.setItem(CACHE, JSON.stringify(allScoreData));
+        localStorage.setItem(CTIME, Date.now().toString());
+    } catch(e) {}
 
     renderScores();
     updateLastRefresh();

@@ -2,8 +2,8 @@
 const CACHE = 'al-sports-v1';
 const STATIC = [
   '/',
-  '/kitanga-fc/',
-  '/kitanga-fc/index.html',
+  '/al-sports/',
+  '/al-sports/index.html',
   'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap'
 ];
 
@@ -43,6 +43,6 @@ self.addEventListener('fetch', e => {
         caches.open(CACHE).then(c => c.put(e.request, clone));
       }
       return res;
-    }).catch(() => caches.match('/kitanga-fc/index.html')))
+    }).catch(() => caches.match('/al-sports/index.html')))
   );
 });

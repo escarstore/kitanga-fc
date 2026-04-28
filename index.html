@@ -772,6 +772,12 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
   <!-- ── END CUSTOM PREDICTOR ──────────────────────────────────── -->
 
   <div class="pred-grid" id="predictions-grid"><div class="pred-loading"><div class="pred-spinner"></div>Generating AI predictions...</div></div>
+  <div id="pred-more-wrap" style="text-align:center;margin-top:20px;display:none">
+    <button onclick="loadMorePredictions()" id="pred-more-btn" style="background:rgba(0,194,255,.1);border:1px solid rgba(0,194,255,.3);color:var(--accent);padding:12px 32px;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:3px;cursor:pointer;transition:all .2s">
+      ⬇ VIEW MORE PREDICTIONS
+    </button>
+  </div>
+  <div class="pred-grid" id="predictions-grid-extra" style="margin-top:16px"></div>
   <div class="affiliate-disclaimer" style="margin-top:20px">⚠️ 18+ only. AI predictions. Always gamble responsibly.</div>
 </section>
 
@@ -918,7 +924,7 @@ footer{background:#030A1A;padding:50px 4% 30px;border-top:2px solid var(--accent
 <section id="football-bot">
   <div class="sl">AI Powered</div>
   <div class="st">Football <span>Bot Assistant</span></div>
-  <p style="text-align:center;color:var(--grey);font-size:14px;max-width:520px;margin:0 auto 28px">Ask our AI bot anything about football — live scores, transfers, match previews, tactics, rules and more. Powered by OpenAI.</p>
+  <p style="text-align:center;color:var(--grey);font-size:14px;max-width:520px;margin:0 auto 28px">Ask our AI bot anything about football — live scores, transfers, match previews, tactics, rules and more. Powered by Gemini AI.</p>
   <div id="bot-section">
     <div class="bot-header">
       <img src="logo.png" alt="AL Sports Bot" class="bot-avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,184,0,.3)">
@@ -1612,7 +1618,7 @@ async function fetchLiveNews(force) {
     const grid = document.getElementById('news-grid');
     if (!grid) return;
     // 20-minute cache saves mobile data
-    const CACHE = 'kfc_news_v3', CTIME = 'kfc_news_ts_v3', MINS = 20;
+    const CACHE = 'kfc_news_v5', CTIME = 'kfc_news_ts_v5', MINS = 15;
     if (!force) {
         try {
             const cached = localStorage.getItem(CACHE);
@@ -1879,6 +1885,8 @@ async function fetchAIPredictions(force) {
     }
 }
 
+let allPredictions = []; // full list including extras
+
 function renderPredictions(preds, grid) {
     if (!preds || !preds.length) {
         grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--grey)">
@@ -1886,7 +1894,6 @@ function renderPredictions(preds, grid) {
             <div style="font-size:15px;font-weight:600;color:var(--white);margin-bottom:8px">All predicted matches have finished!</div>
             <div style="font-size:13px;color:var(--grey);margin-bottom:16px">Fetching fresh upcoming predictions...</div>
         </div>`;
-        // Auto-fetch fresh predictions after 3 seconds
         setTimeout(() => {
             localStorage.removeItem('kfc_preds_v7');
             localStorage.removeItem('kfc_preds_ts_v7');
@@ -1894,13 +1901,45 @@ function renderPredictions(preds, grid) {
         }, 3000);
         return;
     }
-    grid.innerHTML = preds.map((p, i) =>
+
+    // Show first 4, offer more if available
+    const first4 = preds.slice(0, 4);
+    const rest = preds.slice(4);
+
+    grid.innerHTML = first4.map((p, i) =>
         `<div class="pred-card" id="${p._id || 'pred_' + i}" style="transition:opacity .6s ease,transform .6s ease">` +
         buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct,
             p.prediction, p.analysis, p.confidence, p.tip,
             PRED_BETS[i%2], PRED_BETS[(i+1)%2]).replace('<div class="pred-card">', '') +
         '</div>'
     ).join('');
+
+    // Show/hide View More button
+    const moreWrap = document.getElementById('pred-more-wrap');
+    const extraGrid = document.getElementById('predictions-grid-extra');
+    if (moreWrap) moreWrap.style.display = rest.length ? 'block' : 'none';
+    if (extraGrid) extraGrid.innerHTML = '';
+    allPredictions = preds; // store full list
+}
+
+function loadMorePredictions() {
+    const extraGrid = document.getElementById('predictions-grid-extra');
+    const moreWrap = document.getElementById('pred-more-wrap');
+    const rest = allPredictions.slice(4);
+    if (!rest.length || !extraGrid) return;
+
+    extraGrid.innerHTML = rest.map((p, i) =>
+        `<div class="pred-card" id="${p._id || 'pred_extra_' + i}" style="transition:opacity .6s ease,transform .6s ease">` +
+        buildPredCard(p, p.home_win_pct, p.draw_pct, p.away_win_pct,
+            p.prediction, p.analysis, p.confidence, p.tip,
+            PRED_BETS[i%2], PRED_BETS[(i+1)%2]).replace('<div class="pred-card">', '') +
+        '</div>'
+    ).join('');
+
+    if (moreWrap) moreWrap.style.display = 'none';
+
+    // Scroll to extra grid
+    extraGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function schedulePredictionCheck() {
@@ -2428,6 +2467,8 @@ function normalizeFixture(fix, leagueId) {
     const liveStatuses = ['1H','HT','2H','ET','BT','P','SUSP','INT','LIVE'];
     const ftStatuses   = ['FT','AET','PEN'];
 
+    const kickoffTs = new Date(fix.fixture.date).getTime();
+
     if (liveStatuses.includes(s.short)) {
         statusGroup = 'LIVE';
         statusLabel = elapsed ? elapsed + "'" : 'LIVE';
@@ -2436,9 +2477,15 @@ function normalizeFixture(fix, leagueId) {
         statusLabel = 'FT';
     } else {
         statusGroup = 'NS';
-        // Format kick-off time in local time
-        const d = new Date(fix.fixture.date);
-        statusLabel = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        // Dynamic: show countdown if < 60 min away, else show local time
+        const minsUntil = Math.round((kickoffTs - Date.now()) / 60000);
+        if (minsUntil > 0 && minsUntil <= 60) {
+            statusLabel = `in ${minsUntil}m`;
+        } else if (minsUntil <= 0 && minsUntil > -120) {
+            statusLabel = 'Starting...';
+        } else {
+            statusLabel = new Date(kickoffTs).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
     }
 
     return {
@@ -2453,7 +2500,8 @@ function normalizeFixture(fix, leagueId) {
         awayGoals:   fix.goals.away,
         statusGroup,
         statusLabel,
-        kickoffTs:   new Date(fix.fixture.date).getTime(),
+        kickoffTs,
+        rawDate:     fix.fixture.date, // store for dynamic updates
         venue:       fix.fixture.venue?.name || ''
     };
 }
@@ -2465,6 +2513,26 @@ function switchLeague(leagueId) {
     });
     renderScores();
 }
+
+// Update NS match countdown times every 60 seconds dynamically
+setInterval(() => {
+    allScoreData.forEach(m => {
+        if (m.statusGroup !== 'NS' || !m.rawDate) return;
+        const kickoffTs = new Date(m.rawDate).getTime();
+        const minsUntil = Math.round((kickoffTs - Date.now()) / 60000);
+        if (minsUntil > 0 && minsUntil <= 60) {
+            m.statusLabel = `in ${minsUntil}m`;
+        } else if (minsUntil <= 0 && minsUntil > -10) {
+            m.statusLabel = 'Starting...';
+            m.statusGroup = 'LIVE'; // transition to live
+        } else {
+            m.statusLabel = new Date(kickoffTs).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+        }
+    });
+    // Re-render quietly if grid visible
+    const grid = document.getElementById('scores-grid');
+    if (grid && allScoreData.length) renderScores();
+}, 60000);
 
 function renderScores() {
     const grid = document.getElementById('scores-grid');

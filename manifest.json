@@ -2,7 +2,7 @@
   "name": "AL Sports",
   "short_name": "AL Sports",
   "description": "AI-powered football predictions, live scores & betting tips",
-  "start_url": "/kitanga-fc/",
+  "start_url": "/al-sports/",
   "display": "standalone",
   "background_color": "#060d24",
   "theme_color": "#0A1F6E",
@@ -25,12 +25,12 @@
   "shortcuts": [
     {
       "name": "Today's Predictions",
-      "url": "/kitanga-fc/#predictions",
+      "url": "/al-sports/#predictions",
       "description": "View today's AI football predictions"
     },
     {
       "name": "Live Scores",
-      "url": "/kitanga-fc/#live-scores",
+      "url": "/al-sports/#live-scores",
       "description": "Check live football scores"
     }
   ]

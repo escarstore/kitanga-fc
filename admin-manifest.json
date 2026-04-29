@@ -2,7 +2,7 @@
   "name": "AL Sports Admin",
   "short_name": "AL Admin",
   "description": "AL Sports Admin Panel — manage your sports site",
-  "start_url": "/al-sports/admin.html",
+  "start_url": "/al-sports/admin",
   "display": "standalone",
   "background_color": "#060d24",
   "theme_color": "#060d24",

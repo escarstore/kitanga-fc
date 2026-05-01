@@ -27,13 +27,13 @@
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
-      "url": "/admin.html#dashboard",
+      "url": "al-sports/admin.html#dashboard",
       "icons": [{ "src": "admin-logo.png", "sizes": "96x96" }]
     },
     {
       "name": "Predictions",
       "short_name": "Predictions",
-      "url": "/admin.html#predictions",
+      "url": "al-sports/admin.html#predictions",
       "icons": [{ "src": "admin-logo.png", "sizes": "96x96" }]
     }
   ]

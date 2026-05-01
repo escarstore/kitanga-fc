@@ -2,8 +2,8 @@
   "name": "AL Sports — Football Predictions & Live Scores",
   "short_name": "AL Sports",
   "description": "AI-powered football predictions, live scores, betting tips — free every day.",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "al-sports/",
+  "scope": "al-sports/",
   "display": "standalone",
   "background_color": "#070E2B",
   "theme_color": "#0A1F6E",
@@ -29,13 +29,13 @@
     {
       "name": "Today's Predictions",
       "short_name": "Predictions",
-      "url": "/#predictions",
+      "url": "al-sports/#predictions",
       "icons": [{ "src": "logo.png", "sizes": "96x96" }]
     },
     {
       "name": "Live Scores",
       "short_name": "Scores",
-      "url": "/#live-scores",
+      "url": "al-sports/#live-scores",
       "icons": [{ "src": "logo.png", "sizes": "96x96" }]
     }
   ]

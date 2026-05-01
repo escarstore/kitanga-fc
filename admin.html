@@ -564,6 +564,18 @@ body{font-family:'Barlow',sans-serif;background:#060d24;color:var(--white);min-h
           <div style="margin-top:10px;font-size:12px" id="football-key-status"></div>
         </div></div>
 
+        <div class="sec-card" style="border:1px solid #f59e0b44">
+          <div class="sec-head"><div class="sec-head-title" style="color:#f59e0b">☁️ Sync Local Data to Cloud</div></div>
+          <div class="sec-body">
+            <p style="font-size:13px;color:var(--grey);margin-bottom:14px">
+              If data (results, videos, players, etc.) is <strong style="color:#fff">visible on your phone but not on other devices</strong>, 
+              it means it was saved locally and never reached Supabase. Click the button below to upload all local data to the cloud.
+            </p>
+            <button class="btn btn-accent" onclick="syncLocalToCloud()" id="sync-cloud-btn">☁️ Upload Local Data to Supabase</button>
+            <div id="sync-cloud-status" style="margin-top:12px;font-size:13px"></div>
+          </div>
+        </div>
+
         <div class="sec-card"><div class="sec-head"><div class="sec-head-title" style="color:var(--red)">⚠️ Danger Zone</div></div>
         <div class="sec-body"><button class="btn btn-red" onclick="clearData('players')">Clear All Players</button>
         <button class="btn btn-red" onclick="clearData('fixtures')">Clear All Fixtures</button>
@@ -1606,58 +1618,119 @@ checkAuth();
 
 // ── ADMIN PWA INSTALL ─────────────────────────────────────────
 let adminDeferredPrompt = null;
+
+// Chrome fires this when the site meets PWA install criteria
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     adminDeferredPrompt = e;
-    if (!localStorage.getItem('admin_pwa_installed')) {
-        setTimeout(() => { const f=document.getElementById('admin-pwa-fab'); if(f) f.style.display='flex'; }, 2000);
-    }
+    // Show the FAB — Chrome confirmed this page is installable
+    const f = document.getElementById('admin-pwa-fab');
+    if (f) f.style.display = 'flex';
 });
-window.addEventListener('load', () => {
-    if (!localStorage.getItem('admin_pwa_installed')) {
-        setTimeout(() => { const f=document.getElementById('admin-pwa-fab'); if(f) f.style.display='flex'; }, 3000);
+
+window.addEventListener('load', async () => {
+    // Register service worker (required for PWA install eligibility)
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('admin-sw.js').catch(() => {});
     }
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('admin-sw.js').catch(()=>{});
-    loadSiteControls();
+    await loadSiteControls();
+
+    // If already installed as PWA, hide the FAB
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+        const f = document.getElementById('admin-pwa-fab');
+        if (f) f.style.display = 'none';
+        return;
+    }
+
+    // Show FAB after 3s as a fallback (will show install instructions if Chrome
+    // hasn't fired beforeinstallprompt yet, which is fine — guides user manually)
+    setTimeout(() => {
+        const f = document.getElementById('admin-pwa-fab');
+        if (f) f.style.display = 'flex';
+    }, 3000);
 });
+
 async function adminInstallPWA() {
     if (adminDeferredPrompt) {
+        // Native install prompt available — use it
         adminDeferredPrompt.prompt();
         const { outcome } = await adminDeferredPrompt.userChoice;
         adminDeferredPrompt = null;
         if (outcome === 'accepted') {
-            localStorage.setItem('admin_pwa_installed', '1');
-            document.getElementById('admin-pwa-fab').style.display = 'none';
-            toast('🎉 AL Sports Admin installed!');
+            const f = document.getElementById('admin-pwa-fab');
+            if (f) f.style.display = 'none';
+            toast('🎉 AL Sports Admin installed on your phone!');
         }
     } else {
-        toast('Tap ⋮ → "Add to Home screen" to install Admin');
+        // Native prompt not available — show manual install modal
+        showInstallModal();
     }
 }
+
+function showInstallModal() {
+    // Remove existing modal if any
+    const existing = document.getElementById('pwa-install-modal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'pwa-install-modal';
+    modal.style.cssText = `
+        position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);
+        display:flex;align-items:flex-end;justify-content:center;
+    `;
+    modal.innerHTML = `
+        <div style="background:#0d1b3e;border-radius:20px 20px 0 0;padding:28px 24px 40px;width:100%;max-width:480px;border-top:3px solid #f59e0b;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#f59e0b;letter-spacing:1px">📲 INSTALL ADMIN APP</div>
+                <button onclick="document.getElementById('pwa-install-modal').remove()" 
+                    style="background:none;border:none;color:#94a3b8;font-size:22px;cursor:pointer;padding:4px 8px">✕</button>
+            </div>
+            <div style="font-size:14px;color:#cbd5e1;line-height:1.8">
+                <div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px;margin-bottom:16px">
+                    <strong style="color:#f59e0b">For Chrome on Android:</strong><br>
+                    1. Tap the <strong style="color:#fff">⋮ menu</strong> (top right)<br>
+                    2. Tap <strong style="color:#fff">"Add to Home screen"</strong><br>
+                    3. Tap <strong style="color:#fff">"Add"</strong> to confirm
+                </div>
+                <div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:14px">
+                    <strong style="color:#f59e0b">For Safari on iPhone:</strong><br>
+                    1. Tap the <strong style="color:#fff">Share button</strong> (box with arrow)<br>
+                    2. Scroll and tap <strong style="color:#fff">"Add to Home Screen"</strong><br>
+                    3. Tap <strong style="color:#fff">"Add"</strong>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+    });
+}
+
 window.addEventListener('appinstalled', () => {
-    localStorage.setItem('admin_pwa_installed','1');
-    const f=document.getElementById('admin-pwa-fab'); if(f) f.style.display='none';
+    const f = document.getElementById('admin-pwa-fab');
+    if (f) f.style.display = 'none';
+    toast('✅ Admin app installed successfully!');
 });
 
-// ── SITE CONTROLS (saved to Supabase → propagates to ALL devices via Realtime) ─
+// ── SITE CONTROLS (saves to Supabase → all devices update instantly) ─────────
 async function saveSiteControl(key, value) {
     const valStr = value ? '1' : '0';
     localStorage.setItem('al_ctrl_' + key, valStr);
     if (supabaseClient) {
         try {
-            // Upsert so it works whether the row exists yet or not
             const { error } = await supabaseClient.from('site_settings')
                 .upsert([{ key, value: valStr, updated_at: new Date().toISOString() }], { onConflict: 'key' });
             if (error) throw error;
             toast(value ? '✅ Enabled for ALL users' : '🔕 Hidden from ALL users');
         } catch(e) {
-            console.warn('site_settings save failed:', e.message);
-            toast('⚠️ Saved locally only — check Supabase connection', true);
+            toast('⚠️ Saved locally only — Supabase error: ' + e.message, true);
         }
     } else {
-        toast(value ? '✅ Section enabled (local)' : '🔕 Section hidden (local)');
+        toast(value ? '✅ Enabled (local only)' : '🔕 Hidden (local only)');
     }
 }
+
 async function loadSiteControls() {
     const map = {
         'predictions_visible': 'toggle-predictions',
@@ -1671,7 +1744,7 @@ async function loadSiteControls() {
             if (data && data.length) {
                 data.forEach(row => localStorage.setItem('al_ctrl_' + row.key, row.value));
             }
-        } catch(e) { console.warn('loadSiteControls Supabase error:', e.message); }
+        } catch(e) { console.warn('loadSiteControls:', e.message); }
     }
     Object.entries(map).forEach(([k, id]) => {
         const el = document.getElementById(id);
@@ -1680,6 +1753,66 @@ async function loadSiteControls() {
         el.checked = stored === null ? true : stored === '1';
     });
 }
+
+// ── SYNC LOCAL → CLOUD ────────────────────────────────────────────────────────
+// Pushes any data stuck in localStorage up to Supabase
+// so it becomes visible on ALL devices
+async function syncLocalToCloud() {
+    if (!supabaseClient) { toast('❌ Not connected to Supabase', true); return; }
+    const btn = document.getElementById('sync-cloud-btn');
+    const status = document.getElementById('sync-cloud-status');
+    btn.disabled = true;
+    btn.textContent = '⏳ Syncing...';
+
+    const TABLES = ['players','fixtures','results','photos','videos','reviews','sponsors','ads','leagues'];
+    let totalSynced = 0;
+    let errors = [];
+
+    for (const table of TABLES) {
+        const raw = localStorage.getItem('kfc_' + table);
+        if (!raw) continue;
+        let items;
+        try { items = JSON.parse(raw); } catch(e) { continue; }
+        if (!items || !items.length) continue;
+
+        // Fetch what's already in Supabase so we don't duplicate
+        let existing = [];
+        try {
+            const { data } = await supabaseClient.from(table).select('id');
+            existing = (data || []).map(r => r.id);
+        } catch(e) {}
+
+        const toUpload = items.filter(item => item.id && !existing.includes(item.id));
+        if (!toUpload.length) continue;
+
+        try {
+            const { error } = await supabaseClient.from(table).insert(toUpload);
+            if (error) {
+                errors.push(table + ': ' + error.message);
+            } else {
+                totalSynced += toUpload.length;
+                if (status) status.innerHTML += `<div style="color:#22c55e">✅ ${table}: uploaded ${toUpload.length} item(s)</div>`;
+            }
+        } catch(e) {
+            errors.push(table + ': ' + e.message);
+        }
+    }
+
+    btn.disabled = false;
+    btn.textContent = '☁️ Upload Local Data to Supabase';
+
+    if (errors.length) {
+        errors.forEach(e => {
+            if (status) status.innerHTML += `<div style="color:#ef4444">❌ ${e}</div>`;
+        });
+    }
+    if (totalSynced === 0 && !errors.length) {
+        if (status) status.innerHTML = '<div style="color:#94a3b8">✔ Nothing new to sync — Supabase already has your data.</div>';
+    } else if (totalSynced > 0) {
+        toast(`☁️ Synced ${totalSynced} item(s) to cloud!`);
+    }
+}
+
 </script>
 </body>
 </html>

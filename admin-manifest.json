@@ -2,7 +2,7 @@
   "name": "AL Sports Admin Panel",
   "short_name": "AL Admin",
   "description": "AL Sports staff admin panel — manage predictions, scores, players and more.",
-  "start_url": "/admin.html",
+  "start_url": "al-sports/admin.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#060d24",

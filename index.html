@@ -1618,27 +1618,45 @@ async function postReview() {
     const n = document.getElementById('rn')?.value.trim();
     const t = document.getElementById('rt')?.value.trim();
     if (!n || !t) { showToast('Please fill in your name and review ✏️', 'error'); return; }
-    const reviewData = { id: uid(), author: n, match_name: document.getElementById('rm')?.value.trim() || '', stars: stars, text: t, date: new Date().toISOString().split('T')[0], approved: false };
-    await DataService.addItem('reviews', reviewData);
-    showToast('✅ Review sent! Waiting for approval.', 'success');
-    document.getElementById('rn').value = ''; document.getElementById('rm').value = ''; document.getElementById('rt').value = '';
-    setStar(5);
-    renderReviews();
+    const reviewData = { id: uid(), author: n, match_name: document.getElementById('rm')?.value.trim() || '', stars, text: t, date: new Date().toISOString().split('T')[0], approved: false };
+    const result = await DataService.addItem('reviews', reviewData);
+    if (result) {
+        showToast('✅ Review sent! Waiting for approval.', 'success');
+        document.getElementById('rn').value = '';
+        if (document.getElementById('rm')) document.getElementById('rm').value = '';
+        document.getElementById('rt').value = '';
+        setStar(5);
+        renderReviews();
+    } else {
+        showToast('❌ Could not send review. Please try again.', 'error');
+    }
 }
 
 // Sponsor Inquiry Functions
 async function submitSponsorInquiry() {
     const name = document.getElementById('contact-name')?.value.trim();
     const email = document.getElementById('contact-email')?.value.trim();
-    if (!name || !email) return;
-    const inquiry = { id: uid(), name, email, phone: document.getElementById('contact-phone')?.value.trim() || '', company: document.getElementById('contact-company')?.value.trim() || '', package: document.getElementById('contact-package')?.value, message: document.getElementById('contact-message')?.value.trim() || '', date: new Date().toISOString(), status: 'New' };
-    await DataService.addItem('sponsor_inquiries', inquiry);
-    document.getElementById('contact-name').value = '';
-    document.getElementById('contact-email').value = '';
-    document.getElementById('contact-phone').value = '';
-    document.getElementById('contact-company').value = '';
-    document.getElementById('contact-message').value = '';
-    showToast('✅ Proposal sent! We\'ll contact you soon.', 'success');
+    if (!name || !email) { showToast('Please fill in your name and email.', 'error'); return; }
+    const inquiry = {
+        id: uid(), name, email,
+        phone:   document.getElementById('contact-phone')?.value.trim() || '',
+        company: document.getElementById('contact-company')?.value.trim() || '',
+        package: document.getElementById('contact-package')?.value || '',
+        message: document.getElementById('contact-message')?.value.trim() || '',
+        date: new Date().toISOString(),
+        status: 'New'
+    };
+    const result = await DataService.addItem('sponsor_inquiries', inquiry);
+    if (result) {
+        document.getElementById('contact-name').value = '';
+        document.getElementById('contact-email').value = '';
+        if (document.getElementById('contact-phone')) document.getElementById('contact-phone').value = '';
+        if (document.getElementById('contact-company')) document.getElementById('contact-company').value = '';
+        if (document.getElementById('contact-message')) document.getElementById('contact-message').value = '';
+        showToast("✅ Proposal sent! We'll contact you soon.", 'success');
+    } else {
+        showToast('❌ Could not send proposal. Please try again or use WhatsApp.', 'error');
+    }
 }
 function sendViaWhatsApp() {
     const name = document.getElementById('contact-name')?.value.trim() || 'Not provided';
